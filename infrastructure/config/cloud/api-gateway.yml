@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service-route
+          uri:
+            ${USER_SERVICE_URL}
+#        predicates:
+#          - Host=user
