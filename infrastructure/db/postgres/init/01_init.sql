@@ -1,0 +1,10 @@
+CREATE DATABASE user_service_db;
+CREATE DATABASE authentication_service_db;
+CREATE DATABASE image_service_db;
+CREATE DATABASE musician_profile_service_db;
+CREATE DATABASE album_service_db;
+CREATE DATABASE audio_service_db;
+CREATE DATABASE playlist_service_db;
+CREATE DATABASE audio_service_db;
+CREATE DATABASE feed_service_db;
+CREATE DATABASE user_content_interaction_service_db;

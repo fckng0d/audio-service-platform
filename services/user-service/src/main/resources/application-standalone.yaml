@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  cloud:
+    config:
+      enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_service_db?currentSchema=public
+    username: user
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/user_service_db?currentSchema=public
+    user: user
+    password: password
+    schemas: public
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="LOG_FILE" value="logs/app.log"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <if condition='isDefined("LOKI")'>
+        <then>
+            <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+                <http>
+                    <url>${LOKI}/loki/api/v1/push</url>
+                </http>
+                <format>
+                    <label>
+                        <pattern>app=user-service, host=${HOSTNAME}, level=%level}</pattern>
+                    </label>
+                    <message>
+                        <pattern>l=%level h=${HOSTNAME} c=%logger{20} t=%thread | %msg %ex</pattern>
+                    </message>
+                    <sortByTime>true</sortByTime>
+                </format>
+            </appender>
+
+            <root level="info">
+                <appender-ref ref ="CONSOLE"/>
+                <appender-ref ref ="LOKI"/>
+            </root>
+
+        </then>
+        <else>
+            <root level="info">
+                <appender-ref ref ="CONSOLE"/>
+            </root>
+        </else>
+    </if>
+
+<!--    <springProfile name="standalone">-->
+<!--        <root level="DEBUG">-->
+<!--            <appender-ref ref="CONSOLE"/>-->
+<!--        </root>-->
+<!--    </springProfile>-->
+
+<!--    <springProfile name="cloudconfig">-->
+<!--        <root level="INFO">-->
+<!--            <appender-ref ref="FILE"/>-->
+<!--        </root>-->
+<!--    </springProfile>-->
+
+</configuration>
