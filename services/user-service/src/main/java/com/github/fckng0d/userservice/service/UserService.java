@@ -4,15 +4,15 @@ package com.github.fckng0d.userservice.service;
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.domain.UserProfile;
 import com.github.fckng0d.userservice.domain.UserRole;
-import com.github.fckng0d.userservice.dto.user.UserRequestDto;
+import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
 import com.github.fckng0d.userservice.exception.user.EmailAlreadyExistsException;
 import com.github.fckng0d.userservice.exception.user.UserNotFoundException;
+import com.github.fckng0d.userservice.exception.user.UserRoleAlreadyAssignedException;
 import com.github.fckng0d.userservice.exception.user.UsernameAlreadyExistsException;
 import com.github.fckng0d.userservice.repositoty.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,21 +46,21 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public User createUser(UserRequestDto userRequestDto) {
+    public User createUser(CreateUserRequestDto createUserRequestDto) {
         UserRole userRole = userRoleService.getRoleByName(DEFAULT_ROLE);
 
-        if (this.userExistsByUsername(userRequestDto.getUsername())) {
-            throw  new UsernameAlreadyExistsException(userRequestDto.getUsername());
+        if (this.userExistsByUsername(createUserRequestDto.getUsername())) {
+            throw  new UsernameAlreadyExistsException(createUserRequestDto.getUsername());
         }
 
-        if (this.userExistsByEmail(userRequestDto.getEmail())) {
-            throw  new EmailAlreadyExistsException(userRequestDto.getEmail());
+        if (this.userExistsByEmail(createUserRequestDto.getEmail())) {
+            throw  new EmailAlreadyExistsException(createUserRequestDto.getEmail());
         }
 
         User user = User.builder()
-                .username(userRequestDto.getUsername())
-                .passwordHash(userRequestDto.getPasswordHash())
-                .email(userRequestDto.getEmail())
+                .username(createUserRequestDto.getUsername())
+                .passwordHash(createUserRequestDto.getPasswordHash())
+                .email(createUserRequestDto.getEmail())
                 .build();
 
         UserProfile userProfile = UserProfile.builder()
@@ -88,7 +88,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updatePassword(UUID id, String passwordHash) {
+    public User updatePasswordHash(UUID id, String passwordHash) {
         User user = this.getUserById(id);
         user.setPasswordHash(passwordHash);
         return userRepository.save(user);
@@ -101,6 +101,19 @@ public class UserService {
 
         User user = this.getUserById(id);
         user.setEmail(email);
+        return userRepository.save(user);
+    }
+
+    public User assignRole(UUID userId, String roleName) {
+        User user = this.getUserById(userId);
+        UserRole role = userRoleService.getRoleByName(roleName);
+
+        if (user.getRoles().contains(role)) {
+            throw new UserRoleAlreadyAssignedException(userId, roleName);
+        }
+
+        user.getRoles().add(role);
+        role.getUsers().add(user);
         return userRepository.save(user);
     }
 }

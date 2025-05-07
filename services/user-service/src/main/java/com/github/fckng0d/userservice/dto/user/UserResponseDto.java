@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class UserResponseDto {
-    private UUID id;
+    private String id;
     private String username;
     private String email;
 //    private UserProfileResponseDTO profile;

@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/image_service_db?currentSchema=public
+    username: user
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  flyway:
+    url: jdbc:postgresql://postgres:5432/image_service_db?currentSchema=public
+    user: postgres
+    password: password
+    schemas: public
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+#  metrics:
+#    export:
+#      prometheus: {}
+#    distribution:
+#      percentiles-histogram:
+#        "[http.server.requests]": true
+
+grpc:
+  server:
+    port: 50051
+  client:
+    s3-service:
+      address: static://s3-service:50051
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+

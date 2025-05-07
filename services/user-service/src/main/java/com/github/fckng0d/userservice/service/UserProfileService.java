@@ -12,6 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
+    private final UserService userService;
 
     public UserProfile getUserProfileById(UUID id) {
         return userProfileRepository.findById(id)
@@ -21,10 +22,11 @@ public class UserProfileService {
     public void addMusicianProfileId(UUID profileId, UUID musicianProfileId) {
         UserProfile userProfile = this.getUserProfileById(profileId);
 
-        if (userProfile.getMusicianProfileId() == null) {
+        if (userProfile.getMusicianProfileId() != null) {
             throw new MusicianProfileAlreadyAssignedException(profileId);
         }
 
+        userService.assignRole(userProfile.getUser().getId(), "ROLE_MUSICIAN");
         userProfile.setMusicianProfileId(musicianProfileId);
         userProfileRepository.save(userProfile);
     }

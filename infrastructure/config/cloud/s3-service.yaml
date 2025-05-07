@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  s3-bucket: ${AWS_S3_BUCKET}
+  service-endpoint: ${AWS_SERVICE_ENDPOINT}
+  signing-region: ${AWS_SIGNING_REGION}
+
+grpc:
+  server:
+    port: 50051

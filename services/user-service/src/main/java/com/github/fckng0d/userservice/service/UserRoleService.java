@@ -2,15 +2,14 @@ package com.github.fckng0d.userservice.service;
 
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.domain.UserRole;
-import com.github.fckng0d.userservice.dto.role.UpdateUserRoleDto;
-import com.github.fckng0d.userservice.dto.role.UserRoleDto;
+import com.github.fckng0d.userservice.dto.role.UpdateUserRoleRequestDto;
+import com.github.fckng0d.userservice.dto.role.CreateUserRoleRequestDto;
 import com.github.fckng0d.userservice.exception.role.RoleNotFoundException;
 import com.github.fckng0d.userservice.exception.role.RoleAlreadyExistsException;
 import com.github.fckng0d.userservice.repositoty.UserRepository;
 import com.github.fckng0d.userservice.repositoty.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class UserRoleService {
         return userRole.orElseThrow(() -> new RoleNotFoundException(userRoleName));
     }
 
-    public UserRole createRole(UserRoleDto userRoleDto) {
+    public UserRole createRole(CreateUserRoleRequestDto userRoleDto) {
         if (userRoleRepository.existsByName(userRoleDto.getName())) {
             throw new RoleAlreadyExistsException(userRoleDto.getName());
         }
@@ -44,11 +43,11 @@ public class UserRoleService {
         return getRoleByName(userRoleName).getUsers();
     }
 
-    public void updateUserRole(UpdateUserRoleDto updateUserRoleDto) {
-        UserRole role = this.getRoleByName(updateUserRoleDto.getOldName());
+    public void updateUserRole(UpdateUserRoleRequestDto updateUserRoleRequestDto) {
+        UserRole role = this.getRoleByName(updateUserRoleRequestDto.getOldName());
 
-        role.setName(updateUserRoleDto.getNewName());
-        role.setDescription(updateUserRoleDto.getDescription());
+        role.setName(updateUserRoleRequestDto.getNewName());
+        role.setDescription(updateUserRoleRequestDto.getDescription());
 
         userRoleRepository.save(role);
     }

@@ -16,11 +16,14 @@
     </parent>
 
     <modules>
-        <module>shared-libraries/grpc-commons</module>
+        <module>shared-libraries/commons-grpc</module>
+        <module>shared-libraries/commons-dto</module>
         <module>infrastructure/config-server</module>
         <module>services/api-gateway</module>
         <module>services/user-service</module>
         <module>services/authentication-service</module>
+        <module>services/s3-service</module>
+        <module>services/image-service</module>
     </modules>
 
     <properties>

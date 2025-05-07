@@ -45,10 +45,25 @@ services:
 #    healthcheck:
     volumes:
       - ./db/postgres/init/01_init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./pgdata:/var/lib/postgresql/data
-
+      - ./db/pgdata:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - app-network
+
+  s3-service:
+    container_name: s3-service
+    build:
+      context: ../
+      dockerfile: infrastructure/docker/s3-service/Dockerfile
+    env_file: ../.env
+    ports:
+      - "${S3_SERVICE_PORT:-8083}:8080"
+    depends_on:
+      - config-server
+      - postgres
+      - grafana
+      - loki
     networks:
       - app-network
 

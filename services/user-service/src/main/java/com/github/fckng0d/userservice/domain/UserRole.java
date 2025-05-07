@@ -13,7 +13,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "user_roles")
+@Table(name = "user_roles", indexes = {
+        @Index(name = "idx_role_name", columnList = "name")
+})
 public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

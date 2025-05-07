@@ -46,7 +46,13 @@ grpc:
     port: 50051
   client:
     authentication-service:
-      address: static://authentication-service:8080
+      address: static://authentication-service:50051
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
+    s3-service:
+      address: static://s3-service:50051
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+

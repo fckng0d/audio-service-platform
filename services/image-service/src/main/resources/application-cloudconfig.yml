@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: image-service
+  config:
+    import: 'optional:configserver::'
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL}
