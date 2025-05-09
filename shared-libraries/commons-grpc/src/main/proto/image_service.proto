@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package com.github.fckng0d.imageservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.imageservice";
+option java_outer_classname = "ImageServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+service ImageService {
+  rpc GetImageUrlById(ImageIdRequest) returns (ImageUrlResponse);
+  rpc GetImageDataById(ImageIdRequest) returns (ImageDataResponse);
+  rpc UploadImage(UploadImageRequest) returns (ImageIdResponse);
+  rpc DeleteImageById(ImageIdRequest) returns (google.protobuf.Empty);
+}
+
+message ImageIdRequest {
+  int64 imageId = 1;
+}
+
+message ImageDataResponse {
+  string originalFileName = 1;
+  string fileExtension = 2;
+  bytes imageFileData = 3;
+}
+
+message ImageIdResponse {
+  int64 imageId = 1;
+}
+
+message ImageUrlResponse {
+  string imageUrl = 1;
+}
+
+message UploadImageRequest {
+  string fileName = 1;
+  bytes imageFileData = 2;
+}

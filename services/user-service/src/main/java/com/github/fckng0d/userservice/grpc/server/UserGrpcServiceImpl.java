@@ -7,7 +7,7 @@ import com.github.fckng0d.grpc.userservice.UpdateUsernameRequest;
 import com.github.fckng0d.grpc.userservice.UpdatePasswordHashRequest;
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
-import com.github.fckng0d.userservice.mapper.UserMapper;
+import com.github.fckng0d.userservice.mapper.internal.UserMapper;
 import com.github.fckng0d.userservice.service.UserService;
 import com.github.fckng0d.grpc.userservice.UserResponse;
 import com.github.fckng0d.grpc.userservice.GetUserByIdRequest;

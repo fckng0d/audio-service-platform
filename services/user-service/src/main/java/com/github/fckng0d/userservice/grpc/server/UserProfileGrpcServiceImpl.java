@@ -4,7 +4,7 @@ import com.github.fckng0d.grpc.userservice.UserProfileServiceGrpc;
 import com.github.fckng0d.grpc.userservice.GetUserProfileByIdRequest;
 import com.github.fckng0d.grpc.userservice.UserProfileResponse;
 import com.github.fckng0d.userservice.domain.UserProfile;
-import com.github.fckng0d.userservice.mapper.UserProfileMapper;
+import com.github.fckng0d.userservice.mapper.internal.UserProfileMapper;
 import com.github.fckng0d.userservice.service.UserProfileService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;

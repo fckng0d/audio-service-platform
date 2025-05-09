@@ -67,24 +67,24 @@ services:
     networks:
       - app-network
 
-  user-service:
-    container_name: user-service
-    build:
-      context: ../
-      dockerfile: infrastructure/docker/user-service/Dockerfile
-    env_file: ../.env
-#    environment:
-#      - USER_SERVICE_PORT=${USER_SERVICE_PORT}
-#      - CONFIG_SERVER_URL=${CONFIG_SERVER_URL}
-    ports:
-      - "${USER_SERVICE_PORT:-8081}:8080"
-    depends_on:
-      - config-server
-      - postgres
-      - grafana
-      - loki
-    networks:
-      - app-network
+#  user-service:
+#    container_name: user-service
+#    build:
+#      context: ../
+#      dockerfile: infrastructure/docker/user-service/Dockerfile
+#    env_file: ../.env
+##    environment:
+##      - USER_SERVICE_PORT=${USER_SERVICE_PORT}
+##      - CONFIG_SERVER_URL=${CONFIG_SERVER_URL}
+#    ports:
+#      - "${USER_SERVICE_PORT:-8081}:8080"
+#    depends_on:
+#      - config-server
+#      - postgres
+#      - grafana
+#      - loki
+#    networks:
+#      - app-network
 
 
   loki:

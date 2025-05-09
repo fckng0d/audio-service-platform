@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
+    username: user
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  flyway:
+    url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
+    user: user
+    password: password
+    schemas: public
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+grpc:
+  client:
+    user-service:
+      address: static://${user-service:localhost}:8081
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext

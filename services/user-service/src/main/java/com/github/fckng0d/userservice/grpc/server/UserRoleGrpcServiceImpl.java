@@ -12,7 +12,7 @@ import com.github.fckng0d.userservice.dto.role.UpdateUserRoleRequestDto;
 import com.google.protobuf.Empty;
 import com.github.fckng0d.userservice.domain.UserRole;
 import com.github.fckng0d.userservice.dto.role.CreateUserRoleRequestDto;
-import com.github.fckng0d.userservice.mapper.UserRoleMapper;
+import com.github.fckng0d.userservice.mapper.internal.UserRoleMapper;
 import com.github.fckng0d.userservice.service.UserRoleService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;

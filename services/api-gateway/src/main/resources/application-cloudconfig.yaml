@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: 'optional:configserver:'
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL}
+

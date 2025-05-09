@@ -1,7 +1,9 @@
 package com.github.fckng0d.userservice.service;
 
+import com.github.fckng0d.dto.imageservice.UploadImageRequestDto;
 import com.github.fckng0d.userservice.domain.UserProfile;
 import com.github.fckng0d.userservice.exception.profile.MusicianProfileAlreadyAssignedException;
+import com.github.fckng0d.userservice.grpc.client.ImageServiceGrpcClient;
 import com.github.fckng0d.userservice.repositoty.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
+    private final ImageServiceGrpcClient imageServiceGrpcClient;
+
     private final UserProfileRepository userProfileRepository;
     private final UserService userService;
 
@@ -31,9 +35,24 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
-    public void setImageId(UUID profileId, Long imageId) {
+    public void uploadProfileImage(UUID profileId, UploadImageRequestDto imageRequestDto) {
+        Long imageId = imageServiceGrpcClient.uploadImage(imageRequestDto);
+
         UserProfile userProfile = this.getUserProfileById(profileId);
+        if (userProfile.getImageId() != null) {
+            imageServiceGrpcClient.deleteImageById(imageId);
+        }
         userProfile.setImageId(imageId);
         userProfileRepository.save(userProfile);
+    }
+
+    public void deleteProfileImage(UUID profileId) {
+        UserProfile userProfile = this.getUserProfileById(profileId);
+
+        if (userProfile.getImageId() != null) {
+            imageServiceGrpcClient.deleteImageById(userProfile.getImageId());
+            userProfile.setImageId(null);
+            userProfileRepository.save(userProfile);
+        }
     }
 }

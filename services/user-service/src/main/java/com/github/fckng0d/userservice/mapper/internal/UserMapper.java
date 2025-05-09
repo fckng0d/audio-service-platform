@@ -1,4 +1,4 @@
-package com.github.fckng0d.userservice.mapper;
+package com.github.fckng0d.userservice.mapper.internal;
 
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.grpc.userservice.UserResponse;

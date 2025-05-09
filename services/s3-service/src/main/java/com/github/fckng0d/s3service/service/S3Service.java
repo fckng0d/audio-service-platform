@@ -44,7 +44,7 @@ public class S3Service {
         return s3client.getUrl(bucketName, keyName).toString();
     }
 
-    public static String generateUniqueFileName(String fileName) {
+    private static String generateUniqueFileName(String fileName) {
         String originalFileName = fileName.substring(0, fileName.lastIndexOf("."));
         String fileExtension = fileName.substring(fileName.lastIndexOf("."));
 

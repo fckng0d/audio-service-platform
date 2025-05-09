@@ -9,9 +9,11 @@ import com.github.fckng0d.userservice.exception.user.EmailAlreadyExistsException
 import com.github.fckng0d.userservice.exception.user.UserNotFoundException;
 import com.github.fckng0d.userservice.exception.user.UserRoleAlreadyAssignedException;
 import com.github.fckng0d.userservice.exception.user.UsernameAlreadyExistsException;
+import com.github.fckng0d.userservice.grpc.client.ImageServiceGrpcClient;
 import com.github.fckng0d.userservice.repositoty.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.UUID;
@@ -20,6 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private static final String DEFAULT_ROLE = "USER_ROLE";
+
+    private final ImageServiceGrpcClient imageServiceGrpcClient;
 
     private final UserRepository userRepository;
     private final UserRoleService userRoleService;
@@ -73,9 +77,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUserById(UUID id) {
         User user = this.getUserById(id);
+
+        Long profileImageId = user.getProfile().getImageId();
+
         userRepository.delete(user);
+
+        if (profileImageId != null) {
+            imageServiceGrpcClient.deleteImageById(user.getProfile().getImageId());
+        }
     }
 
     public User updateUsername(UUID id, String username) {

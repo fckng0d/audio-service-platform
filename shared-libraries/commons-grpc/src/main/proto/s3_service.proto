@@ -35,5 +35,3 @@ message FileUrlResponse {
 message FileDataResponse {
   bytes fileData = 1;
 }
-
-

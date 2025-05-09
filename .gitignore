@@ -1,4 +1,6 @@
 *.env
+**/pgdata/
+**/target/
 
 # Compiled class file
 *.class
