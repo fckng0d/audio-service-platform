@@ -24,6 +24,7 @@ public class UserRoleGrpcServiceImpl extends UserRoleServiceGrpc.UserRoleService
     private final UserRoleService userRoleService;
     private final UserRoleMapper userRoleMapper;
 
+    @Override
     public void getRoleByName(GetRoleByNameRequest request, StreamObserver<UserRoleResponse> responseObserver) {
         UserRole role = userRoleService.getRoleByName(request.getRoleName());
         UserRoleResponse userRoleResponse = userRoleMapper.toUserRoleResponse(role);
@@ -32,6 +33,7 @@ public class UserRoleGrpcServiceImpl extends UserRoleServiceGrpc.UserRoleService
         responseObserver.onCompleted();
     }
 
+    @Override
     public void createRole (CreateRoleRequest request, StreamObserver<UserRoleResponse> responseObserver) {
         CreateUserRoleRequestDto createUserRoleRequestDto = userRoleMapper.toCreateUserRoleDto(request);
         UserRole role = userRoleService.createRole(createUserRoleRequestDto);
@@ -53,7 +55,6 @@ public class UserRoleGrpcServiceImpl extends UserRoleServiceGrpc.UserRoleService
     @Override
     public void updateUserRole(UpdateUserRoleRequest request, StreamObserver<Empty> responseObserver) {
         UpdateUserRoleRequestDto updateUserRoleRequestDto = userRoleMapper.toUpdateUserRoleRequestDto(request);
-
         userRoleService.updateUserRole(updateUserRoleRequestDto);
 
         responseObserver.onNext(Empty.getDefaultInstance());

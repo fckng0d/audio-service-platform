@@ -14,6 +14,9 @@ service UserService {
   rpc CreateUser (CreateUserRequest) returns (UserResponse);
   rpc GetUserById (GetUserByIdRequest) returns (UserResponse);
   rpc GetUserByUsername (GetUserByUsernameRequest) returns (UserResponse);
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (UserResponse);
+//  rpc GetIdByUsername (GetIdByUsernameRequest) returns (UserIdResponse);
+//  rpc GetIdByEmail (GetIdByEmailRequest) returns (UserIdResponse);
   rpc UpdateUsername (UpdateUsernameRequest) returns (UserResponse);
   rpc UpdatePasswordHash (UpdatePasswordHashRequest) returns (UserResponse);
   rpc UpdateEmail (UpdateEmailRequest) returns (UserResponse);
@@ -34,6 +37,22 @@ message GetUserByIdRequest {
 message GetUserByUsernameRequest {
   string username = 1;
 }
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+//message GetIdByUsernameRequest {
+//  string username = 1;
+//}
+//
+//message GetIdByEmailRequest {
+//  string email = 1;
+//}
+//
+//message UserIdResponse {
+//  string userId = 1;
+//}
 
 message UpdateUsernameRequest {
   string user_id = 1;  // UUID в виде строки
@@ -64,34 +83,39 @@ message UserResponse {
   string username = 2;
   string email = 3;
   repeated string roles = 4;  // Список ролей
+  string passwordHash = 5;
 }
 
 
 
 service UserProfileService {
-  rpc GetUserProfileById (GetUserProfileByIdRequest) returns (UserProfileResponse);
-  rpc AddMusicianProfileId (AddMusicianProfileRequest) returns (google.protobuf.Empty);
-  rpc SetImageId (SetImageIdRequest) returns (google.protobuf.Empty);
+  rpc GetUserProfileById (UserProfileByIdRequest) returns (UserProfileResponse);
+  rpc AddMusicianProfile(AddMusicianProfileRequest) returns (google.protobuf.Empty);
+  rpc UploadImage(UploadImageRequest) returns (google.protobuf.Empty);
+  rpc DeleteProfileImage(UserProfileByIdRequest) returns (google.protobuf.Empty);
 }
 
-message GetUserProfileByIdRequest {
+message UserProfileByIdRequest {
   string profile_id = 1; // UUID в виде строки
 }
 
+// TODO: также изменить
 message AddMusicianProfileRequest {
   string profile_id = 1; // UUID профиля
   string musician_profile_id = 2; // UUID музыкального профиля
 }
 
-message SetImageIdRequest {
+message UploadImageRequest {
   string profile_id = 1; // UUID профиля
-  int64 image_id = 2; // ID изображения
+  string fileName = 2;
+  bytes imageFileData = 3;
 }
 
 message UserProfileResponse {
   string profile_id = 1; // UUID профиля
   string musician_profile_id = 2; // UUID музыкального профиля
-  int64 image_id = 3;
+  string registration_date = 3;
+  int64 image_id = 4;
 }
 
 

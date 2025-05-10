@@ -104,11 +104,64 @@
         <!--            <scope>test</scope>-->
         <!--        </dependency>-->
 
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>5.5.0</version> <!-- или актуальная версия -->
+        </dependency>
+
+        <!-- JWT Support -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- JWE Support -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.37</version>
+        </dependency>
+
+        <!-- JWE Support -->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.spec.javax.xml.crypto</groupId>-->
+<!--            <artifactId>jboss-xmldsig-api_1.0_spec</artifactId>-->
+<!--            <version>1.0.0.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.nimbusds</groupId>-->
+<!--            <artifactId>nimbus-jose-jwt</artifactId>-->
+<!--            <version>9.31</version>-->
+<!--        </dependency>-->
 
         <!-- Commons Proto Files -->
         <dependency>
             <groupId>com.github.fckng0d</groupId>
             <artifactId>commons-grpc</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- Commons DTO -->
+        <dependency>
+            <groupId>com.github.fckng0d</groupId>
+            <artifactId>commons-dto</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -136,17 +189,17 @@
 
 
         <!-- MapStruct -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.mapstruct</groupId>-->
-        <!--            <artifactId>mapstruct</artifactId>-->
-        <!--            <version>1.5.3.Final</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.mapstruct</groupId>-->
-        <!--            <artifactId>mapstruct-processor</artifactId>-->
-        <!--            <version>1.5.3.Final</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.3.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.3.Final</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Logging -->
         <dependency>

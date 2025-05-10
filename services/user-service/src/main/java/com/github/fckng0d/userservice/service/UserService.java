@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final String DEFAULT_ROLE = "USER_ROLE";
+    private static final String DEFAULT_ROLE = "LISTENER_ROLE";
 
     private final ImageServiceGrpcClient imageServiceGrpcClient;
 
@@ -30,12 +30,17 @@ public class UserService {
 
     public User getUserById(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> UserNotFoundException.byId(id));
     }
 
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> UserNotFoundException.byUsername(username));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> UserNotFoundException.byEmail(email));
     }
 
     public Set<UserRole> getRolesById(UUID id) {
@@ -54,11 +59,11 @@ public class UserService {
         UserRole userRole = userRoleService.getRoleByName(DEFAULT_ROLE);
 
         if (this.userExistsByUsername(createUserRequestDto.getUsername())) {
-            throw  new UsernameAlreadyExistsException(createUserRequestDto.getUsername());
+            throw new UsernameAlreadyExistsException(createUserRequestDto.getUsername());
         }
 
         if (this.userExistsByEmail(createUserRequestDto.getEmail())) {
-            throw  new EmailAlreadyExistsException(createUserRequestDto.getEmail());
+            throw new EmailAlreadyExistsException(createUserRequestDto.getEmail());
         }
 
         User user = User.builder()
@@ -92,7 +97,7 @@ public class UserService {
 
     public User updateUsername(UUID id, String username) {
         if (this.userExistsByUsername(username)) {
-            throw  new UsernameAlreadyExistsException(username);
+            throw new UsernameAlreadyExistsException(username);
         }
 
         User user = this.getUserById(id);
@@ -108,7 +113,7 @@ public class UserService {
 
     public User updateEmail(UUID id, String email) {
         if (this.userExistsByUsername(email)) {
-            throw  new EmailAlreadyExistsException(email);
+            throw new EmailAlreadyExistsException(email);
         }
 
         User user = this.getUserById(id);

@@ -26,11 +26,11 @@ public class RefreshToken {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "token", nullable = false, unique = true)
-    private String token;
-
     @Column(name = "user_id", nullable = false)
     private UUID userId;
+
+    @Column(name = "token", nullable = false, unique = true)
+    private String token;
 
     @CreatedDate
     @Column(name = "creation_date", nullable = false)

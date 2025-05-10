@@ -1,19 +1,20 @@
 package com.github.fckng0d.userservice.grpc.server;
 
-import com.github.fckng0d.grpc.userservice.UserServiceGrpc;
+import com.github.fckng0d.grpc.userservice.AssignRoleRequest;
 import com.github.fckng0d.grpc.userservice.CreateUserRequest;
+import com.github.fckng0d.grpc.userservice.DeleteUserByIdRequest;
+import com.github.fckng0d.grpc.userservice.GetUserByIdRequest;
 import com.github.fckng0d.grpc.userservice.GetUserByUsernameRequest;
-import com.github.fckng0d.grpc.userservice.UpdateUsernameRequest;
+import com.github.fckng0d.grpc.userservice.UpdateEmailRequest;
 import com.github.fckng0d.grpc.userservice.UpdatePasswordHashRequest;
+import com.github.fckng0d.grpc.userservice.UpdateUsernameRequest;
+import com.github.fckng0d.grpc.userservice.UserResponse;
+import com.github.fckng0d.grpc.userservice.UserServiceGrpc;
+import com.github.fckng0d.grpc.userservice.GetUserByEmailRequest;
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
 import com.github.fckng0d.userservice.mapper.internal.UserMapper;
 import com.github.fckng0d.userservice.service.UserService;
-import com.github.fckng0d.grpc.userservice.UserResponse;
-import com.github.fckng0d.grpc.userservice.GetUserByIdRequest;
-import com.github.fckng0d.grpc.userservice.UpdateEmailRequest;
-import com.github.fckng0d.grpc.userservice.DeleteUserByIdRequest;
-import com.github.fckng0d.grpc.userservice.AssignRoleRequest;
 import io.grpc.stub.StreamObserver;
 import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,15 @@ public class UserGrpcServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     @Override
     public void getUserByUsername(GetUserByUsernameRequest request, StreamObserver<UserResponse> responseObserver) {
         User user = userService.getUserByUsername(request.getUsername());
+        UserResponse userResponse = userMapper.toUserResponse(user);
+
+        responseObserver.onNext(userResponse);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getUserByEmail(GetUserByEmailRequest request, StreamObserver<UserResponse> responseObserver) {
+        User user = userService.getUserByEmail(request.getEmail());
         UserResponse userResponse = userMapper.toUserResponse(user);
 
         responseObserver.onNext(userResponse);

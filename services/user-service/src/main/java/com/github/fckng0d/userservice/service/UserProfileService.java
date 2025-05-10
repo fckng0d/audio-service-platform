@@ -23,16 +23,17 @@ public class UserProfileService {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public void addMusicianProfileId(UUID profileId, UUID musicianProfileId) {
-        UserProfile userProfile = this.getUserProfileById(profileId);
-
-        if (userProfile.getMusicianProfileId() != null) {
-            throw new MusicianProfileAlreadyAssignedException(profileId);
-        }
-
-        userService.assignRole(userProfile.getUser().getId(), "ROLE_MUSICIAN");
-        userProfile.setMusicianProfileId(musicianProfileId);
-        userProfileRepository.save(userProfile);
+    //TODO: обращаться к MusicianProfileService (после реализации) и создавать здесь
+    public void createMusicianProfile(UUID profileId) {
+//        UserProfile userProfile = this.getUserProfileById(profileId);
+//
+//        if (userProfile.getMusicianProfileId() != null) {
+//            throw new MusicianProfileAlreadyAssignedException(profileId);
+//        }
+//
+//        userService.assignRole(userProfile.getUser().getId(), "ROLE_MUSICIAN");
+//        userProfile.setMusicianProfileId(musicianProfileId);
+//        userProfileRepository.save(userProfile);
     }
 
     public void uploadProfileImage(UUID profileId, UploadImageRequestDto imageRequestDto) {

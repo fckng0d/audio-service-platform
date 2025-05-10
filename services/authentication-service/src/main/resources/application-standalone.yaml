@@ -27,6 +27,11 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+jwt:
+  secret: "7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"
+  access-expiration-ms: 900000 # 15 минут
+  refresh-expiration-ms: 2592000000 # 1 месяц
+
 grpc:
   client:
     user-service:
@@ -34,3 +39,4 @@ grpc:
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
+

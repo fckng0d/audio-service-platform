@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package com.github.fckng0d.userservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.authenticationservice";
+option java_outer_classname = "authenticationServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthResponse);
+  rpc Login(LoginRequest) returns (AuthResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (AuthResponse);
+  rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message LoginRequest {
+  string identifier = 1; // может быть username или email
+  string password = 2;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message AuthResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}

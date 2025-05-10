@@ -7,6 +7,6 @@ spring:
       routes:
         - id: user-service-route
           uri:
-            http://user-service:8080
+            http://api-gateway:8080
 #        predicates:
 #          - Host=user
