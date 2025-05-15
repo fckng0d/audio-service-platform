@@ -6,7 +6,6 @@ RUN mvn clean package -pl services/s3-service -am -Dmaven.test.skip=true
 
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-ARG API_GATEWAY_PORT=8080
 COPY --from=builder /build/services/s3-service/target/*.jar app.jar
-EXPOSE ${API_GATEWAY_PORT}
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=cloudconfig"]

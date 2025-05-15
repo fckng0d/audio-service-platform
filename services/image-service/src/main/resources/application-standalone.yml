@@ -2,9 +2,13 @@ server:
   port: 8083
 
 spring:
+  cloud:
+    config:
+      enabled: false
+
   datasource:
-    url: jdbc:postgresql://postgres:5432/image_service_db?currentSchema=public
-    username: user
+    url: jdbc:postgresql://localhost:5432/image_service_db?currentSchema=public
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10
@@ -13,7 +17,7 @@ spring:
       max-lifetime: 1800000
 
   flyway:
-    url: jdbc:postgresql://postgres:5432/image_service_db?currentSchema=public
+    url: jdbc:postgresql://localhost:5432/image_service_db?currentSchema=public
     user: postgres
     password: password
     schemas: public
@@ -43,10 +47,10 @@ management:
 
 grpc:
   server:
-    port: 50051
+    port: 50053
   client:
     s3-service:
-      address: static://s3-service:50051
+      address: static://localhost:50054
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext

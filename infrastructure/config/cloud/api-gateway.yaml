@@ -5,8 +5,30 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: auth-service-route
+          uri: http://api-gateway:8080
+          predicates:
+            - Path=/auth/**
         - id: user-service-route
-          uri:
-            http://api-gateway:8080
-#        predicates:
-#          - Host=user
+          predicates:
+            - Path=/user/**
+          uri: http://api-gateway:8080
+          filters:
+            - name: JwtValidation
+
+jwt:
+  secret: "7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"
+  access-expiration-ms: 900000 # 15 минут
+
+grpc:
+  client:
+    authentication-service:
+      address: static://authentication-service:50051
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+    user-service:
+      address: static://user-service:50051
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext

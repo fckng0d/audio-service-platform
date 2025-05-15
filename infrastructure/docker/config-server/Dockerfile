@@ -1,11 +1,12 @@
-FROM maven:3.8.4-openjdk-17 as builder
+
+FROM maven:3.8.4-openjdk-17 AS builder
 WORKDIR /build
 COPY . .
-RUN mvn -pl infrastructure/config-server clean package -Dmaven.test.skip=true
+RUN mvn clean install -pl shared-libraries/commons-grpc,shared-libraries/commons-dto -Dmaven.test.skip=true
+RUN mvn clean package -pl infrastructure/config-server -am -Dmaven.test.skip=true
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-ARG CONFIG_SERVER_PORT=8888
 COPY --from=builder /build/infrastructure/config-server/target/*.jar app.jar
-EXPOSE ${CONFIG_SERVER_PORT}
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=native"]
+EXPOSE 8888
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=cloudconfig"]

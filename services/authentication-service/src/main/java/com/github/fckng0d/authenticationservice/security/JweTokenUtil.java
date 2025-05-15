@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Component
 public class JweTokenUtil {
-
     @Value("${jwt.secret}")
     private String secret;
 
@@ -30,7 +29,7 @@ public class JweTokenUtil {
                 .expirationTime(Date.from(Instant.now().plusMillis(accessExpiration)))
                 .build();
 
-        JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A256GCM);
+        JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A256CBC_HS512);
         Payload payload = new Payload(claims.toJSONObject());
         JWEObject jwe = new JWEObject(header, payload);
 

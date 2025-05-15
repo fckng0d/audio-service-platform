@@ -1,8 +1,12 @@
 package com.github.fckng0d.authenticationservice.grpc.client;
 
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.EmailAlreadyExistsException;
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UserServiceExceptionHandler;
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UsernameAlreadyExistsException;
 import com.github.fckng0d.authenticationservice.mapper.grpc.UserMapper;
 import com.github.fckng0d.dto.userservice.CreateUserRequestDto;
 import com.github.fckng0d.dto.userservice.UserResponseDto;
+import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -16,16 +20,23 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceGrpcClient {
+
     @GrpcClient("user-service")
     private UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
 
     private final UserMapper userMapper;
+    private final UserServiceExceptionHandler userServiceExceptionHandler;
 
     public UserResponseDto createUser(CreateUserRequestDto requestDto) {
-        var request = userMapper.toCreateUserRequest(requestDto);
-        var userResponse = userServiceBlockingStub.createUser(request);
-
-        return userMapper.toUserResponseDto(userResponse);
+        try {
+            var request = userMapper.toCreateUserRequest(requestDto);
+            var userResponse = userServiceBlockingStub.createUser(request);
+            return userMapper.toUserResponseDto(userResponse);
+        } catch (StatusRuntimeException e) {
+            throw userServiceExceptionHandler.handle(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public UserResponseDto getUserById(UUID userId) {

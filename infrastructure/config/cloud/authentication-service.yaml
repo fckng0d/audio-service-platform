@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
-    username: user
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10
@@ -14,7 +14,7 @@ spring:
 
   flyway:
     url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
-    user: user
+    user: postgres
     password: password
     schemas: public
 
@@ -37,7 +37,7 @@ grpc:
     port: 50051
   client:
     user-service:
-      address: static://user-service:8080
+      address: static://user-service:50051
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext

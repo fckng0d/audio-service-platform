@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/user_service_db?currentSchema=public
-    username: user
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10
@@ -45,11 +45,6 @@ grpc:
   server:
     port: 50051
   client:
-#    authentication-service:
-#      address: static://authentication-service:50051
-#      enable-keep-alive: true
-#      keep-alive-without-calls: true
-#      negotiation-type: plaintext
     image-service:
       address: static://image-service:50051
       enable-keep-alive: true

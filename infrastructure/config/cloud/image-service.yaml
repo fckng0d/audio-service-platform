@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/image_service_db?currentSchema=public
-    username: user
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10

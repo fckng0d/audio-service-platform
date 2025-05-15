@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   cloud:
@@ -8,7 +8,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/user_service_db?currentSchema=public
-    username: user
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10
@@ -18,7 +18,7 @@ spring:
 
   flyway:
     url: jdbc:postgresql://localhost:5432/user_service_db?currentSchema=public
-    user: user
+    user: postgres
     password: password
     schemas: public
 
@@ -31,5 +31,14 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+grpc:
+  server:
+    port: 50052
+  client:
+    image-service:
+      address: static://localhost:50053
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
 
 

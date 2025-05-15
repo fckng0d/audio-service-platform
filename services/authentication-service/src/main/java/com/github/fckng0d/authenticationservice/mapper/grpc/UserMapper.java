@@ -11,6 +11,6 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     CreateUserRequest toCreateUserRequest(CreateUserRequestDto dto);
 
-    @Mapping(source = "roles", target = "roles")
+    @Mapping(source = "rolesList", target = "roles")
     UserResponseDto toUserResponseDto(UserResponse response);
 }

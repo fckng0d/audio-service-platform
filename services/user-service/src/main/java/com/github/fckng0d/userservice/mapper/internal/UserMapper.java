@@ -5,6 +5,7 @@ import com.github.fckng0d.grpc.userservice.UserResponse;
 import com.github.fckng0d.userservice.domain.UserRole;
 import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
 import com.github.fckng0d.grpc.userservice.CreateUserRequest;
+import com.google.protobuf.ProtocolStringList;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -18,25 +19,26 @@ import java.util.stream.Collectors;
 public interface UserMapper {
 
     // CreateUserRequest -> CreateUserRequestDto
-    @Mapping(target = "passwordHash", source = "password_hash")
     CreateUserRequestDto toCreateUserRequestDto(CreateUserRequest createUserRequest);
 
     // User -> UserResponse
-    @Mapping(source = "id", target = "user_id", qualifiedByName = "mapUuidToString")
-    @Mapping(source = "roles", target = "roles", qualifiedByName = "mapUserRoles")
-    UserResponse toUserResponse(User user);
-
-    @Named("mapUuidToString")
-    default String mapUuidToString(UUID id) {
-        return id != null ? id.toString() : "";
+    default UserResponse toUserResponse(User user) {
+        return UserResponse.newBuilder()
+                .setUserId(user.getId().toString())
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail())
+                .addAllRoles(
+                        user.getRoles().stream()
+                                .map(UserRole::getName)
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
+}
+//    @Mapping(target = "userId", source = "id", qualifiedByName = "mapUuidToString")
+//    @Mapping(target = "rolesList", source = "roles", qualifiedByName = "mapUserRoles")
+//    UserResponse toUserResponse(User user);
 
-    @Named("mapUserRoles")
-    default List<String> mapUserRoles(Set<UserRole> roles) {
-        return roles.stream()
-                .map(UserRole::getName)
-                .collect(Collectors.toList());
-    }
 
 //    UserProfileDto toDto(UserProfile profile);
 //
@@ -45,4 +47,4 @@ public interface UserMapper {
 //    @Mapping(target = "user", ignore = true)
 //    @Mapping(target = "id", ignore = true)
 //    UserProfile toEntity(UserProfileDto dto);
-}
+

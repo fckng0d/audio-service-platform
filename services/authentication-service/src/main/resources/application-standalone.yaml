@@ -1,10 +1,14 @@
 server:
-  port: 8082
+  port: 8081
 
 spring:
+  cloud:
+    config:
+      enabled: false
+
   datasource:
-    url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
-    username: user
+    url: jdbc:postgresql://localhost:5432/authentication_service_db?currentSchema=public
+    username: postgres
     password: password
     hikari:
       maximum-pool-size: 10
@@ -13,8 +17,8 @@ spring:
       max-lifetime: 1800000
 
   flyway:
-    url: jdbc:postgresql://postgres:5432/authentication_service_db?currentSchema=public
-    user: user
+    url: jdbc:postgresql://localhost:5432/authentication_service_db?currentSchema=public
+    user: postgres
     password: password
     schemas: public
 
@@ -33,9 +37,11 @@ jwt:
   refresh-expiration-ms: 2592000000 # 1 месяц
 
 grpc:
+  server:
+    port: 50051
   client:
     user-service:
-      address: static://${user-service:localhost}:8081
+      address: static://localhost:50052
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext

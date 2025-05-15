@@ -1,10 +1,13 @@
 package com.github.fckng0d.authenticationservice.service;
 
 import com.github.fckng0d.authenticationservice.domain.RefreshToken;
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.EmailAlreadyExistsException;
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UsernameAlreadyExistsException;
 import com.github.fckng0d.authenticationservice.grpc.client.UserServiceGrpcClient;
 import com.github.fckng0d.authenticationservice.repository.RefreshTokenRepository;
 import com.github.fckng0d.authenticationservice.security.JweTokenUtil;
 import com.github.fckng0d.authenticationservice.security.PasswordEncoderUtil;
+import com.github.fckng0d.authenticationservice.security.RefreshTokenUtil;
 import com.github.fckng0d.dto.authenticationservice.LoginRequestDto;
 import com.github.fckng0d.dto.authenticationservice.AuthResponseDto;
 import com.github.fckng0d.dto.authenticationservice.RegisterRequestDto;
@@ -28,21 +31,22 @@ public class AuthService {
     private final UserServiceGrpcClient userServiceGrpcClient;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JweTokenUtil jweTokenUtil;
+    private final RefreshTokenUtil refreshTokenUtil;
     private final PasswordEncoderUtil passwordEncoderUtil;
 
     public AuthResponseDto register(RegisterRequestDto requestDto) {
-        var createUserRequestDto = CreateUserRequestDto.builder()
-                .username(requestDto.getUsername())
-                .email(requestDto.getEmail())
-                .passwordHash(passwordEncoderUtil.encode(requestDto.getPassword()))
-                .build();
-        var userResponse = userServiceGrpcClient.createUser(createUserRequestDto);
-
         try {
+            var createUserRequestDto = CreateUserRequestDto.builder()
+                    .username(requestDto.getUsername())
+                    .email(requestDto.getEmail())
+                    .passwordHash(passwordEncoderUtil.encode(requestDto.getPassword()))
+                    .build();
+            var userResponse = userServiceGrpcClient.createUser(createUserRequestDto);
+
             return this.generateTokens(userResponse.getUserId(), userResponse.getRoles());
-        } catch (Exception e) {
-            // TODO: написать исключение
-            throw new RuntimeException(e);
+        } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
+            System.out.println(e);
+            throw e;
         }
     }
 
@@ -59,8 +63,8 @@ public class AuthService {
         return generateTokens(userResponse.getUserId(), userResponse.getRoles());
     }
 
-    public AuthResponseDto refresh(String token) {
-        var refreshToken = refreshTokenRepository.findByToken(token)
+    public AuthResponseDto refresh(String refreshTokenString) {
+        var refreshToken = refreshTokenRepository.findByToken(refreshTokenString)
                 // TODO: написать исключение
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
@@ -70,7 +74,12 @@ public class AuthService {
         }
 
         var userResponse = userServiceGrpcClient.getUserById(refreshToken.getUserId());
-        return this.generateTokens(userResponse.getUserId(), userResponse.getRoles());
+        var newAccessToken = this.generateAccessToken(userResponse.getUserId(), userResponse.getRoles());
+
+        return AuthResponseDto.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(refreshToken.getToken())
+                .build();
     }
 
     public void revokeToken(String refreshToken) {
@@ -102,23 +111,42 @@ public class AuthService {
         return identifier.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
-    private AuthResponseDto generateTokens(UUID userId, Set<String> roles) {
+    private String generateAccessToken(UUID userId, Set<String> roles) {
         try {
-            var accessTokenString = jweTokenUtil.generateEncryptedToken(userId, roles);
-            var refreshTokenString = UUID.randomUUID().toString();
+            return jweTokenUtil.generateEncryptedToken(userId, roles);
+        } catch (Exception e) {
+            // TODO: написать исключение
+            throw new RuntimeException("", e);
+        }
+    }
+
+    private String generateRefreshToken(UUID userId) {
+        try {
+            var refreshTokenString = refreshTokenUtil.generateRefreshToken();
 
             var refreshToken = RefreshToken.builder()
                     .userId(userId)
                     .token(refreshTokenString)
                     .expiryDate(Instant.now().plusMillis(refreshExpiration))
                     .build();
-
             refreshTokenRepository.save(refreshToken);
 
-            return new AuthResponseDto(accessTokenString, refreshTokenString);
+            return refreshTokenString;
         } catch (Exception e) {
             // TODO: написать исключение
-            throw new RuntimeException("");
+            throw new RuntimeException("", e);
+        }
+    }
+
+    private AuthResponseDto generateTokens(UUID userId, Set<String> roles) {
+        try {
+            var accessToken = this.generateAccessToken(userId, roles);
+            var refreshToken = this.generateRefreshToken(userId);
+
+            return new AuthResponseDto(accessToken, refreshToken);
+        } catch (Exception e) {
+            // TODO: написать исключение
+            throw new RuntimeException("", e);
         }
     }
 }

@@ -19,7 +19,7 @@ public interface ImageMapper {
 
     @Named("byteArrayToByteString")
     static ByteString byteArrayToByteString(byte[] byteArray) {
-        return byteArray == null ? null : ByteString.copyFrom(byteArray);
+        return byteArray != null ? ByteString.copyFrom(byteArray) : ByteString.EMPTY;
     }
 
     @Named("mapByteString")

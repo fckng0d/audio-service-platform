@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api-gateway" />
         <module name="config-server" />
         <module name="commons-grpc" />
       </profile>
@@ -15,22 +14,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath>
+        <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="commons-dto" />
-      </profile>
-      <profile name="Annotation profile for audio-service-platform" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath>
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.0.Beta1/mapstruct-processor-1.6.0.Beta1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.0.Beta1/mapstruct-1.6.0.Beta1.jar" />
-        </processorPath>
-        <module name="image-service" />
-        <module name="user-service" />
       </profile>
       <profile name="Annotation profile for s3-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -44,7 +31,7 @@
         </processorPath>
         <module name="s3-service" />
       </profile>
-      <profile name="Annotation profile for authentication-service" enabled="true">
+      <profile name="Annotation profile for audio-service-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -53,11 +40,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.0.Beta1/mapstruct-processor-1.6.0.Beta1.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.0.Beta1/mapstruct-1.6.0.Beta1.jar" />
         </processorPath>
+        <module name="api-gateway" />
         <module name="authentication-service" />
+        <module name="user-service" />
+        <module name="image-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="admin-server" target="17" />
+      <module name="jwt-utils" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -70,6 +61,7 @@
       <module name="commons-grpc" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="image-service" options="-parameters" />
+      <module name="jwt-utils" options="-parameters" />
       <module name="s3-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

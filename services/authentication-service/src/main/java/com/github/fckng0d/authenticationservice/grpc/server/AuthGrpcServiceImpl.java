@@ -1,5 +1,7 @@
 package com.github.fckng0d.authenticationservice.grpc.server;
 
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.EmailAlreadyExistsException;
+import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UsernameAlreadyExistsException;
 import com.github.fckng0d.authenticationservice.mapper.internal.AuthMapper;
 import com.github.fckng0d.authenticationservice.service.AuthService;
 import com.github.fckng0d.grpc.authenticationservice.AuthResponse;
@@ -7,6 +9,7 @@ import com.github.fckng0d.grpc.authenticationservice.AuthServiceGrpc;
 import com.github.fckng0d.grpc.authenticationservice.LoginRequest;
 import com.github.fckng0d.grpc.authenticationservice.RefreshTokenRequest;
 import com.github.fckng0d.grpc.authenticationservice.RegisterRequest;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +23,28 @@ public class AuthGrpcServiceImpl extends AuthServiceGrpc.AuthServiceImplBase {
 
     @Override
     public void register(RegisterRequest request, StreamObserver<AuthResponse> responseObserver) {
-        var requestDto = authMapper.toRegisterRequestDto(request);
-        var authResponseDto = authService.register(requestDto);
-        var authResponse = authMapper.toAuthResponse(authResponseDto);
+       try {
+           var requestDto = authMapper.toRegisterRequestDto(request);
+           var authResponseDto = authService.register(requestDto);
+           var authResponse = authMapper.toAuthResponse(authResponseDto);
 
-        responseObserver.onNext(authResponse);
-        responseObserver.onCompleted();
+           responseObserver.onNext(authResponse);
+           responseObserver.onCompleted();
+       } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
+           responseObserver.onError(
+                   Status.ALREADY_EXISTS
+                           .withDescription(e.getMessage())
+                           .withCause(e)
+                           .asRuntimeException()
+           );
+       } catch (Exception e) {
+           responseObserver.onError(
+                   Status.INTERNAL
+                           .withDescription("Internal server error in authentication-service: " + e.getMessage())
+                           .withCause(e)
+                           .asRuntimeException()
+           );
+       }
     }
 
     @Override

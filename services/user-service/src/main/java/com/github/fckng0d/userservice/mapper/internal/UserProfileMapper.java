@@ -12,7 +12,7 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
 
-    @Mapping(source = "profileId", target = "profileId", qualifiedByName = "mapUUID")
+    @Mapping(source = "id", target = "profileId", qualifiedByName = "mapUUID")
     @Mapping(source = "imageId", target = "imageId")
     @Mapping(source = "registrationDate", target = "registrationDate", qualifiedByName = "mapInstantToString")
     @Mapping(source = "musicianProfileId", target = "musicianProfileId", qualifiedByName = "mapUUID")

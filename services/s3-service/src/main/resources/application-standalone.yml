@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 
 spring:
   cloud:
@@ -17,3 +17,8 @@ aws:
   s3-bucket: ${AWS_S3_BUCKET}
   service-endpoint: ${AWS_SERVICE_ENDPOINT}
   signing-region: ${AWS_SIGNING_REGION}
+
+
+grpc:
+  server:
+    port: 50054

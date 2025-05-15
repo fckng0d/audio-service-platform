@@ -13,8 +13,11 @@ import com.github.fckng0d.grpc.userservice.UserServiceGrpc;
 import com.github.fckng0d.grpc.userservice.GetUserByEmailRequest;
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
+import com.github.fckng0d.userservice.exception.user.EmailAlreadyExistsException;
+import com.github.fckng0d.userservice.exception.user.UsernameAlreadyExistsException;
 import com.github.fckng0d.userservice.mapper.internal.UserMapper;
 import com.github.fckng0d.userservice.service.UserService;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
@@ -58,12 +61,28 @@ public class UserGrpcServiceImpl extends UserServiceGrpc.UserServiceImplBase {
 
     @Override
     public void createUser(CreateUserRequest request, StreamObserver<UserResponse> responseObserver) {
-        CreateUserRequestDto createUserRequestDto = userMapper.toCreateUserRequestDto(request);
-        User user = userService.createUser(createUserRequestDto);
-        UserResponse userResponse = userMapper.toUserResponse(user);
+        try {
+            CreateUserRequestDto createUserRequestDto = userMapper.toCreateUserRequestDto(request);
+            User user = userService.createUser(createUserRequestDto);
+            UserResponse userResponse = userMapper.toUserResponse(user);
 
-        responseObserver.onNext(userResponse);
-        responseObserver.onCompleted();
+            responseObserver.onNext(userResponse);
+            responseObserver.onCompleted();
+        } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
+            responseObserver.onError(
+                    Status.ALREADY_EXISTS
+                            .withDescription(e.getMessage())
+                            .withCause(e)
+                            .asRuntimeException()
+            );
+        } catch (Exception e) {
+            responseObserver.onError(
+                    Status.INTERNAL
+                            .withDescription("Internal server error in user-service: " + e.getMessage())
+                            .withCause(e)
+                            .asRuntimeException()
+            );
+        }
     }
 
     @Override
