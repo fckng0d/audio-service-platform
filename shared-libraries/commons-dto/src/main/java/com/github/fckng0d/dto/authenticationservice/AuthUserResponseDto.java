@@ -1,4 +1,4 @@
-package com.github.fckng0d.dto.userservice;
+package com.github.fckng0d.dto.authenticationservice;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDto {
+public class AuthUserResponseDto {
     private UUID userId;
     private String username;
     private String email;
     private Set<String> roles;
+    private String passwordHash;
 }

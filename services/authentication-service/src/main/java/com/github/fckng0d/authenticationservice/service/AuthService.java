@@ -8,6 +8,7 @@ import com.github.fckng0d.authenticationservice.repository.RefreshTokenRepositor
 import com.github.fckng0d.authenticationservice.security.JweTokenUtil;
 import com.github.fckng0d.authenticationservice.security.PasswordEncoderUtil;
 import com.github.fckng0d.authenticationservice.security.RefreshTokenUtil;
+import com.github.fckng0d.dto.authenticationservice.AuthUserResponseDto;
 import com.github.fckng0d.dto.authenticationservice.LoginRequestDto;
 import com.github.fckng0d.dto.authenticationservice.AuthResponseDto;
 import com.github.fckng0d.dto.authenticationservice.RegisterRequestDto;
@@ -96,11 +97,11 @@ public class AuthService {
         refreshTokenRepository.deleteAllByExpiryDateBefore(Instant.now());
     }
 
-    private UserResponseDto getUserByIdentifier(String identifier) {
+    private AuthUserResponseDto getUserByIdentifier(String identifier) {
 //        try {
         return isEmail(identifier)
-                ? userServiceGrpcClient.getUserByEmail(identifier)
-                : userServiceGrpcClient.getUserByUsername(identifier);
+                ? userServiceGrpcClient.getUserWithPasswordHashByEmail(identifier)
+                : userServiceGrpcClient.getUserWithPasswordHashByUsername(identifier);
         // TODO: написать исключение
 //        } catch (UserNotFoundException e) {
 //            return null; // или пробрасывай, если хочешь разную обработку

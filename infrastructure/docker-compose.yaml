@@ -48,7 +48,7 @@ services:
       - POSTGRES_DB=postgres
 #    healthcheck:
     volumes:
-      - ./db/postgres/init/01_init.sql:/docker-entrypoint-initdb.d/init.sql
+#      - ./db/postgres/init/01_init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./db/pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"

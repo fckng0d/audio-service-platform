@@ -4,6 +4,8 @@ import com.github.fckng0d.authenticationservice.exception.grpc.userservice.Email
 import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UserServiceExceptionHandler;
 import com.github.fckng0d.authenticationservice.exception.grpc.userservice.UsernameAlreadyExistsException;
 import com.github.fckng0d.authenticationservice.mapper.grpc.UserMapper;
+import com.github.fckng0d.dto.authenticationservice.AuthResponseDto;
+import com.github.fckng0d.dto.authenticationservice.AuthUserResponseDto;
 import com.github.fckng0d.dto.userservice.CreateUserRequestDto;
 import com.github.fckng0d.dto.userservice.UserResponseDto;
 import io.grpc.StatusRuntimeException;
@@ -61,6 +63,22 @@ public class UserServiceGrpcClient {
                 .build();
         var userResponse = userServiceBlockingStub.getUserByEmail(userRequest);
         return userMapper.toUserResponseDto(userResponse);
+    }
+
+    public AuthUserResponseDto getUserWithPasswordHashByUsername(String username) {
+        var userRequest = GetUserByUsernameRequest.newBuilder()
+                .setUsername(username)
+                .build();
+        var userResponse = userServiceBlockingStub.getUserByUsername(userRequest);
+        return userMapper.toAuthUserResponseDto(userResponse);
+    }
+
+    public AuthUserResponseDto getUserWithPasswordHashByEmail(String email) {
+        var userRequest = GetUserByEmailRequest.newBuilder()
+                .setEmail(email)
+                .build();
+        var userResponse = userServiceBlockingStub.getUserByEmail(userRequest);
+        return userMapper.toAuthUserResponseDto(userResponse);
     }
 
 }

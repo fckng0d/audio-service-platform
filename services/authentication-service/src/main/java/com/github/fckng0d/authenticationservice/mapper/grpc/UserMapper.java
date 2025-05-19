@@ -1,5 +1,6 @@
 package com.github.fckng0d.authenticationservice.mapper.grpc;
 
+import com.github.fckng0d.dto.authenticationservice.AuthUserResponseDto;
 import com.github.fckng0d.dto.userservice.CreateUserRequestDto;
 import com.github.fckng0d.dto.userservice.UserResponseDto;
 import com.github.fckng0d.grpc.userservice.CreateUserRequest;
@@ -13,4 +14,7 @@ public interface UserMapper {
 
     @Mapping(source = "rolesList", target = "roles")
     UserResponseDto toUserResponseDto(UserResponse response);
+
+    @Mapping(source = "rolesList", target = "roles")
+    AuthUserResponseDto toAuthUserResponseDto(UserResponse userResponse);
 }

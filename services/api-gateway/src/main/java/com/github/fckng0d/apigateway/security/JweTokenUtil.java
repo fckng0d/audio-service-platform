@@ -15,26 +15,9 @@ import java.util.UUID;
 
 @Component
 public class JweTokenUtil {
+
     @Value("${jwt.secret}")
     private String secret;
-
-    @Value("${jwt.access-expiration-ms}")
-    private long accessExpiration;
-
-    public String generateEncryptedToken(UUID userId, Set<String> roles) throws JOSEException {
-        JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .subject(userId.toString())
-                .claim("roles", roles)
-                .expirationTime(Date.from(Instant.now().plusMillis(accessExpiration)))
-                .build();
-
-        JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A256GCM);
-        Payload payload = new Payload(claims.toJSONObject());
-        JWEObject jwe = new JWEObject(header, payload);
-
-        jwe.encrypt(new DirectEncrypter(secret.getBytes()));
-        return jwe.serialize();
-    }
 
     public JWTClaimsSet decrypt(String token) throws ParseException, JOSEException {
         JWEObject jwe = JWEObject.parse(token);

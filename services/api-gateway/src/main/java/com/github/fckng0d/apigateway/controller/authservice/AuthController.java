@@ -1,7 +1,7 @@
-package com.github.fckng0d.apigateway.controller;
+package com.github.fckng0d.apigateway.controller.authservice;
 
 import com.github.fckng0d.apigateway.dto.auth.RefreshTokenRequestDto;
-import com.github.fckng0d.apigateway.grpc.adapter.AuthServiceGrpcAdapter;
+import com.github.fckng0d.apigateway.grpc.adapter.auth.AuthServiceGrpcAdapter;
 import com.github.fckng0d.dto.authenticationservice.AuthResponseDto;
 import com.github.fckng0d.dto.authenticationservice.LoginRequestDto;
 import com.github.fckng0d.dto.authenticationservice.RegisterRequestDto;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/adapter-auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthServiceGrpcAdapter authServiceGrpcAdapter;

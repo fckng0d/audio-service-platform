@@ -1,4 +1,4 @@
-package com.github.fckng0d.apigateway.grpc.adapter;
+package com.github.fckng0d.apigateway.grpc.adapter.auth;
 
 import com.github.fckng0d.apigateway.grpc.exception.authservice.AuthServiceExceptionHandler;
 import com.github.fckng0d.apigateway.mapper.AuthMapper;

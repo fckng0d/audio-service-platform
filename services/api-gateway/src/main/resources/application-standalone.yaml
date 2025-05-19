@@ -2,21 +2,69 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: gateway
   cloud:
     config:
       enabled: false
     gateway:
       routes:
+        # Auth
         - id: auth-service-route
-          uri: http://localhost:8080
           predicates:
           - Path=/auth/**
-        - id: user-service-route
-          predicates:
-            - Path=/user/**
-          uri: http://localhost:8080
+          uri: forward:/adapter-auth
           filters:
-            - name: JwtValidation
+            - RewritePath=/auth/(?<segment>.*), /adapter-auth/auth/$\{segment}
+
+        # Пользователи
+        #   (предполагается, что на фронтенде доступ только к своему id,
+        #   как и ограничение доступа к эндпоинтам для конкретных ролей,
+        #   тк сложно исключить все "админские" пути)
+        - id: user-service-user-route
+          predicates:
+            - Path=/user/{userId}/**
+           # - Path=/users
+          uri: forward:/adapter-user
+          filters:
+            - RewritePath=/user/(?<userId>[^/]+)(?<tail>/?.*), /adapter-user/$\{userId}$\{tail}
+
+        # Роли пользователей
+        # TODO: контроллер
+        - id: user-service-role-route
+          predicates:
+            - Path=/user/role/**
+          uri: forward:/adapter-role
+          filters:
+            - RewritePath=/user/role/(?<segment>.*), /adapter-role/$\{segment}
+
+        # Профиль пользователя (только по конкретному id в теле запроса)
+        - id: user-service-profile-route
+          predicates:
+            - Path=/user/profile/**
+          uri: forward:/adapter-profile
+          filters:
+            - RewritePath=/user/profile/(?<segment>.*), /adapter-profile/$\{segment}
+
+
+        # Профиль музыканта
+        #   доступен всем без авторизации
+        - id: musician-service-profile-route
+          predicates:
+            - Path=/musician/{profileId}
+          uri: forward:/adapter-musician
+          filters:
+            - RewritePath=/musician/(?<profileId>.*), /adapter-musician/$\{profileId}
+
+        # Профиль музыканта
+        #   доступ только для музыканта и админа
+        - id: musician-service-route
+          predicates:
+            - Path=/musician/{profileId}/**
+          uri: forward:/adapter-musician
+          filters:
+            - RewritePath=/musician/(?<profileId>[^/]+)(?<tail>/?.*), /adapter-musician/$\{profileId}$\{tail}
+
 
 jwt:
   secret: "7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"
@@ -26,6 +74,11 @@ grpc:
   client:
     authentication-service:
       address: static://localhost:50051
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+    user-service:
+      address: static://localhost:50052
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
