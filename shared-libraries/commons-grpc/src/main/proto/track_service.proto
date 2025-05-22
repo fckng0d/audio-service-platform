@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package com.github.fckng0d.trackservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.trackservice";
+option java_outer_classname = "TrackServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+
+service TrackService {
+  rpc CreateTrack (CreateTrackRequest) returns (TrackResponse);
+  rpc DeleteTrack  (TrackByIdRequest) returns (google.protobuf.Empty);
+
+  rpc GetTrackById (TrackByIdRequest) returns (TrackResponse);
+}
+
+message CreateTrackRequest {
+  string name = 1;
+  repeated string languages = 2;
+  repeated string genres = 3;
+  repeated string musician_ids = 4;
+  string lyrics = 5;
+  bool is_explicit = 6;
+  UploadFileRequest cover_image = 7;
+  UploadFileRequest track_file = 8;
+}
+
+message UploadFileRequest {
+  string file_name = 1;
+  bytes file_data = 2;
+}
+
+message TrackResponse {
+  int64 id = 1;
+  string name = 2;
+  string track_url = 3;
+  int32 duration_seconds = 4;
+  google.protobuf.Timestamp release_date = 5;
+  repeated string languages = 6;
+  repeated string genres = 7;
+  string lyrics = 8;
+  string cover_image_url = 9;
+  string album_id = 10;
+  repeated string musician_ids = 11;
+  bool is_available = 12;
+  bool is_explicit = 13;
+  int64 audition_count = 14;
+  int32 track_in_favorites_count = 15;
+}
+
+message TrackByIdRequest {
+  int64 track_id = 1;
+}

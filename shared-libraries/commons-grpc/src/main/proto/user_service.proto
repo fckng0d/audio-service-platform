@@ -8,6 +8,8 @@ option java_outer_classname = "UserServiceProto";
 
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "musician_service.proto";
 
 // Сервис для пользователей
 service UserService {
@@ -95,19 +97,14 @@ message AuthUserResponse {
 
 service UserProfileService {
   rpc GetUserProfileById (UserProfileByIdRequest) returns (UserProfileResponse);
-  rpc AddMusicianProfile(AddMusicianProfileRequest) returns (google.protobuf.Empty);
+  rpc CreateMusicianProfile(com.github.fckng0d.musicianservice.CreateMusicianRequest)
+      returns (com.github.fckng0d.musicianservice.MusicianResponse);
   rpc UploadImage(UploadImageRequest) returns (google.protobuf.Empty);
   rpc DeleteProfileImage(UserProfileByIdRequest) returns (google.protobuf.Empty);
 }
 
 message UserProfileByIdRequest {
   string profile_id = 1; // UUID в виде строки
-}
-
-// TODO: также изменить
-message AddMusicianProfileRequest {
-  string profile_id = 1; // UUID профиля
-  string musician_profile_id = 2; // UUID музыкального профиля
 }
 
 message UploadImageRequest {
@@ -119,10 +116,9 @@ message UploadImageRequest {
 message UserProfileResponse {
   string profile_id = 1; // UUID профиля
   string musician_profile_id = 2; // UUID музыкального профиля
-  string registration_date = 3;
-  int64 image_id = 4;
+  google.protobuf.Timestamp registration_date = 3;
+  string image_url = 4;
 }
-
 
 
 service UserRoleService {

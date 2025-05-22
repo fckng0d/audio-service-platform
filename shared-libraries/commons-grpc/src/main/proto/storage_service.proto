@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package com.github.fckng0d.storageservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.storageservice";
+option java_outer_classname = "StorageServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+service ImageService {
+  rpc UploadImage(UploadImageRequest) returns (ImageResponse);
+  rpc DeleteImageById(ImageIdRequest) returns (google.protobuf.Empty);
+  rpc DeleteImageByUrl(ImageUrlRequest) returns (google.protobuf.Empty);
+
+  rpc GetImageById(ImageIdRequest) returns (ImageResponse);
+  rpc GetImageByUrl(ImageUrlRequest) returns (ImageResponse);
+
+  rpc GetImageDataById(ImageIdRequest) returns (ImageDataResponse);
+  rpc GetImageDataByUrl(ImageUrlRequest) returns (ImageDataResponse);
+}
+
+message UploadImageRequest {
+  string fileName = 1;
+  bytes imageFileData = 2;
+}
+
+message ImageIdRequest {
+  int64 imageId = 1;
+}
+
+message ImageUrlRequest {
+  string imageUrl = 1;;
+}
+
+message ImageDataResponse {
+  string originalFileName = 1;
+  string fileExtension = 2;
+  bytes imageFileData = 3;
+}
+
+message ImageResponse {
+  int64 imageId = 1;
+  string imageUrl = 2;
+}
+
+
+
+service AudioService {
+  rpc UploadAudio(UploadAudioRequest) returns (AudioResponse);
+  rpc DeleteAudioById(AudioIdRequest) returns (google.protobuf.Empty);
+  rpc DeleteAudioByUrl(AudioUrlRequest) returns (google.protobuf.Empty);
+
+  rpc GetAudioById(AudioIdRequest) returns (AudioResponse);
+  rpc GetAudioByUrl(AudioUrlRequest) returns (AudioResponse);
+
+  rpc GetAudioDataById(AudioIdRequest) returns (AudioDataResponse);
+  rpc GetAudioDataByUrl(AudioUrlRequest) returns (AudioDataResponse);
+}
+
+message UploadAudioRequest {
+  string fileName = 1;
+  bytes audioFileData = 2;
+}
+
+message AudioIdRequest {
+  int64 audioId = 1;
+}
+
+message AudioUrlRequest {
+  string audioUrl = 1;
+}
+
+message AudioDataResponse {
+  string originalFileName = 1;
+  string fileExtension = 2;
+  bytes audioFileData = 3;
+}
+
+message AudioResponse {
+  int64 audioId = 1;
+  string audioUrl = 2;
+}

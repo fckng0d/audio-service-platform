@@ -22,8 +22,10 @@
         <module>services/api-gateway</module>
         <module>services/user-service</module>
         <module>services/authentication-service</module>
-        <module>services/s3-service</module>
-        <module>services/image-service</module>
+        <module>services/storage-service</module>
+        <module>services/musician-service</module>
+        <module>services/album-service</module>
+        <module>services/track-service</module>
     </modules>
 
     <properties>

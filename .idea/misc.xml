@@ -10,11 +10,17 @@
         <option value="$PROJECT_DIR$/shared-libraries/commons-proto/pom.xml" />
         <option value="$PROJECT_DIR$/services/s3-service/pom.xml" />
         <option value="$PROJECT_DIR$/services/image-service/pom.xml" />
+        <option value="$PROJECT_DIR$/musician-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/musician-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/audio-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/album-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/infrastructure/monitoring/admin-server/pom.xml" />
+        <option value="$PROJECT_DIR$/musician-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/image-service/pom.xml" />
         <option value="$PROJECT_DIR$/shared-libraries/jwt-utils/pom.xml" />
       </set>
     </option>

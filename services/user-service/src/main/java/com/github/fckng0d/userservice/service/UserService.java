@@ -85,13 +85,12 @@ public class UserService {
     @Transactional
     public void deleteUserById(UUID id) {
         User user = this.getUserById(id);
-
-        Long profileImageId = user.getProfile().getImageId();
+        String profileImageUrl = user.getProfile().getImageUrl();
 
         userRepository.delete(user);
 
-        if (profileImageId != null) {
-            imageServiceGrpcClient.deleteImageById(user.getProfile().getImageId());
+        if (profileImageUrl != null) {
+            imageServiceGrpcClient.deleteImageByUrl(profileImageUrl);
         }
     }
 

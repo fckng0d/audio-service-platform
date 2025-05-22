@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package com.github.fckng0d.musicianservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.musicianservice";
+option java_outer_classname = "MusicianServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "album_service.proto";
+
+
+
+service MusicianService {
+  rpc CreateMusician (CreateMusicianRequest) returns (MusicianResponse);
+  rpc DeleteMusician (MusicianByIdRequest) returns (google.protobuf.Empty);
+
+  rpc GetMusicianByNickname (MusicianByNicknameRequest) returns (MusicianResponse);
+  rpc GetMusicianById (MusicianByIdRequest) returns (MusicianResponse);
+
+  rpc UpdateNickname (UpdateNicknameRequest) returns (MusicianResponse);
+  rpc UpdateBio (UpdateBioRequest) returns (MusicianResponse);
+
+  rpc UploadAvatarImage (UploadMusicianImageRequest) returns (google.protobuf.Empty);
+  rpc DeleteAvatarImage (MusicianByIdRequest) returns (google.protobuf.Empty);
+  rpc UploadHeaderImage (UploadMusicianImageRequest) returns (google.protobuf.Empty);
+  rpc DeleteHeaderImage (MusicianByIdRequest) returns (google.protobuf.Empty);
+
+  rpc CreateAlbum (com.github.fckng0d.albumservice.CreateAlbumRequest)
+      returns (com.github.fckng0d.albumservice.AlbumResponse);
+  // TODO: удаление альбома (нужно подтверждение всех исполнителей)
+  rpc GetAllAlbums (MusicianByIdRequest) returns (AlbumIdsResponse);
+
+  //  TODO: управление альбомами
+
+  rpc GetSubscriberIds (MusicianByIdRequest) returns (MusicianSubscriberIdsResponse);
+}
+
+message CreateMusicianRequest {
+  string user_id = 1;
+  string nickname = 2;
+  string bio = 3;
+  UploadFileRequest avatar_image = 4;
+  UploadFileRequest header_image = 5;
+}
+
+message MusicianByNicknameRequest {
+  string nickname = 1;
+}
+
+message MusicianByIdRequest {
+  string musician_id = 1;
+}
+
+message MusicianResponse {
+  string musician_id = 1;
+  string user_id = 2;
+  string nickname = 3;
+  string bio = 4;
+  google.protobuf.Timestamp creation_date = 5;
+  bool is_verified = 6;
+  bool is_blocked = 7;
+  string avatar_image_url = 8;
+  string header_image_url = 9;
+  repeated string album_ids = 10;
+}
+
+message UpdateNicknameRequest {
+  string musician_id = 1;
+  string new_nickname = 2;
+}
+
+message UpdateBioRequest {
+  string musician_id = 1;
+  string new_bio = 2;
+}
+
+message UploadMusicianImageRequest {
+  string musician_id = 1;
+  string file_name = 2;
+  bytes image_file_data = 3;
+}
+
+message UploadFileRequest {
+  string file_name = 1;
+  bytes file_data = 2;
+}
+
+message CreateTrackRequest {
+  string name = 1;
+  repeated string languages = 2;
+  repeated string genres = 3;
+  string lyrics = 4;
+  bool is_explicit = 5;
+  UploadFileRequest cover_image = 6;
+  repeated string musician_ids = 7;
+  UploadFileRequest track_file = 8;
+}
+
+message AlbumIdsResponse {
+  repeated string album_ids = 1;
+}
+
+message MusicianSubscriberIdsResponse {
+  repeated string subscriber_ids = 1;
+}
+
+
+

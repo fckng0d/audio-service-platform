@@ -1,6 +1,6 @@
 //package com.github.fckng0d.dto.userservice;
 //
-//import com.github.fckng0d.dto.imageservice.UploadImageRequestDto;
+//import com.github.fckng0d.dto.UploadImageRequestDto;
 //import jakarta.validation.constraints.NotNull;
 //import lombok.AllArgsConstructor;
 //import lombok.Builder;

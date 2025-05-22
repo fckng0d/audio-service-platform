@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package com.github.fckng0d.albumservice;
+
+option java_multiple_files = true;
+option java_package = "com.github.fckng0d.grpc.albumservice";
+option java_outer_classname = "AlbumServiceProto";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "track_service.proto";
+
+
+service AlbumService {
+  rpc CreateAlbum (CreateAlbumRequest) returns (AlbumResponse);
+  rpc DeleteAlbum (AlbumByIdRequest) returns (google.protobuf.Empty);
+  rpc GetAllMusicians (AlbumByIdRequest) returns (AlbumMusiciansResponse);
+}
+
+message CreateAlbumRequest {
+  string name = 1;
+  repeated string musician_ids = 2;
+  UploadFileRequest cover_image = 3;
+  repeated com.github.fckng0d.trackservice.CreateTrackRequest tracks = 4;
+}
+
+message UploadFileRequest {
+  string file_name = 1;
+  bytes file_data = 2;
+}
+
+message CreateTrackRequest {
+  string name = 1;
+  repeated string languages = 2;
+  repeated string genres = 3;
+  string lyrics = 4;
+  bool is_explicit = 5;
+  repeated string musician_ids = 6;
+  UploadFileRequest cover_image = 7;
+  UploadFileRequest track_file = 8;
+}
+
+message AlbumResponse {
+  string album_id = 1;
+  string name = 2;
+  repeated string languages = 3;
+  repeated string genres = 4;
+  google.protobuf.Timestamp release_date = 5;
+  bool is_available = 6;
+  bool is_blocked = 7;
+  int32 total_duration_seconds = 8;
+  int64 audition_count = 9;
+  int32 album_in_favorites_count = 10;
+  string cover_image_url = 11;
+  repeated int64 track_ids = 12;
+  repeated string musician_ids = 13;
+  repeated string track_guest_ids = 14;
+}
+
+message AlbumByIdRequest {
+  string album_id = 1;
+}
+
+message AlbumMusiciansResponse {
+  repeated string musician_ids = 1;
+}

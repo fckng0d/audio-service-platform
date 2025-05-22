@@ -1,9 +1,9 @@
 package com.github.fckng0d.userservice.mapper.grpc;
 
-import com.github.fckng0d.dto.imageservice.ImageDataResponseDto;
-import com.github.fckng0d.dto.imageservice.UploadImageRequestDto;
-import com.github.fckng0d.grpc.imageservice.UploadImageRequest;
-import com.github.fckng0d.grpc.imageservice.ImageDataResponse;
+import com.github.fckng0d.dto.UploadFileDto;
+import com.github.fckng0d.dto.storageservice.ImageDataResponseDto;
+import com.github.fckng0d.grpc.storageservice.UploadImageRequest;
+import com.github.fckng0d.grpc.storageservice.ImageDataResponse;
 import com.google.protobuf.ByteString;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ImageMapper {
     @Mapping(target = "imageFileData", source = "imageFileData", qualifiedByName = "byteArrayToByteString")
-    UploadImageRequest toUploadImageRequest(UploadImageRequestDto dto);
+    UploadImageRequest toUploadImageRequest(UploadFileDto dto);
 
     @Mapping(target = "imageFileData", source = "imageFileData", qualifiedByName = "mapByteString")
     ImageDataResponseDto toImageDataResponseDto(ImageDataResponse response);
