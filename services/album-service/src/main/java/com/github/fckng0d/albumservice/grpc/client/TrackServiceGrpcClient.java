@@ -2,12 +2,16 @@ package com.github.fckng0d.albumservice.grpc.client;
 
 import com.github.fckng0d.albumservice.mapper.grpc.TrackMapper;
 import com.github.fckng0d.dto.trackservice.CreateTrackDto;
-import com.github.fckng0d.dto.trackservice.TrackResponseDto;
+import com.github.fckng0d.dto.trackservice.TrackPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import com.github.fckng0d.grpc.trackservice.TrackServiceGrpc;
 import com.github.fckng0d.grpc.trackservice.TrackByIdRequest;
+import com.github.fckng0d.grpc.trackservice.AlbumIdRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,11 +21,23 @@ public class TrackServiceGrpcClient {
 
     private final TrackMapper trackMapper;
 
-    public TrackResponseDto createTrack(CreateTrackDto createTrackDto) {
+    public TrackPreviewResponseDto createTrack(CreateTrackDto createTrackDto) {
         var trackRequest = trackMapper.toTrackRequest(createTrackDto);
-        var trackResponse = trackServiceBlockingStub.createTrack(trackRequest);
+        var trackPreviewResponse = trackServiceBlockingStub.createTrack(trackRequest);
 
-        return trackMapper.toTrackResponseDto(trackResponse);
+        return trackMapper.toTrackPreviewResponseDto(trackPreviewResponse);
+    }
+
+    public List<TrackPreviewResponseDto> getTrackPreviewsByAlbumId(UUID albumId) {
+        var request = AlbumIdRequest.newBuilder()
+                .setAlbumId(albumId.toString())
+                .build();
+
+        var response = trackServiceBlockingStub.getTrackPreviewsByAlbumId(request);
+
+        return response.getTracksList().stream()
+                .map(trackMapper::toTrackPreviewResponseDto)
+                .toList();
     }
 
     public void deleteTrackById(long trackId) {

@@ -17,8 +17,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "albums", indexes = {
-        @Index(name = "idx_nickname", columnList = "nickname")
+@Table(name = "tracks", indexes = {
+        @Index(name = "idx_name", columnList = "name"),
+        @Index(name = "idx_album_ids", columnList = "album_id"),
+
 })
 public class Track {
     @Id
@@ -67,11 +69,15 @@ public class Track {
     @Column(name = "album_id")
     private UUID albumId;
 
+
     @ElementCollection
-    @CollectionTable(name = "track_musician_ids", joinColumns = @JoinColumn(name = "track_id"))
-    @Column(name = "musician_ids")
+    @CollectionTable(name = "track_musician_nicknames",
+            joinColumns = @JoinColumn(name = "track_id"),
+            indexes = @Index(name = "idx_track_musician_nickname", columnList = "musician_nicknames")
+    )
+    @Column(name = "musician_nicknames")
     @Builder.Default
-    private List<UUID> musicianIds = new ArrayList<>();
+    private List<String> musicianNicknames = new ArrayList<>();
 
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable;
@@ -83,5 +89,5 @@ public class Track {
     private Long auditionCount;
 
     @Column(name = "track_in_favorites_count")
-    private Integer trackInFavoritesCount;
+    private Long trackInFavoritesCount;
 }

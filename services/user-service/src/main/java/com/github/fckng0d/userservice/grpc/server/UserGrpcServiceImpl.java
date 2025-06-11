@@ -15,7 +15,7 @@ import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.dto.user.CreateUserRequestDto;
 import com.github.fckng0d.userservice.exception.user.EmailAlreadyExistsException;
 import com.github.fckng0d.userservice.exception.user.UsernameAlreadyExistsException;
-import com.github.fckng0d.userservice.mapper.internal.UserMapper;
+import com.github.fckng0d.userservice.mapper.internal.UserMapper2;
 import com.github.fckng0d.userservice.service.UserService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserGrpcServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final UserMapper2 userMapper;
 
     @Override
     public void getUserById(GetUserByIdRequest request, StreamObserver<UserResponse> responseObserver) {
@@ -62,7 +62,11 @@ public class UserGrpcServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     @Override
     public void createUser(CreateUserRequest request, StreamObserver<UserResponse> responseObserver) {
         try {
-            CreateUserRequestDto createUserRequestDto = userMapper.toCreateUserRequestDto(request);
+            CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.builder()
+                    .username(request.getUsername())
+                    .passwordHash(request.getPasswordHash())
+                    .email(request.getEmail())
+                    .build();
             User user = userService.createUser(createUserRequestDto);
             UserResponse userResponse = userMapper.toUserResponse(user);
 

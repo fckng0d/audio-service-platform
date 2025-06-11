@@ -1,0 +1,207 @@
+.navbar {
+  user-select: none;
+}
+
+.navbar *:focus {
+  outline: none;
+}
+
+#dropdown-basic:focus {
+  display: none;
+}
+
+.navbar span {
+  color: rgb(153, 164, 237);
+  /* color: #252525; */
+  font-weight: 500;
+  user-select: none;
+}
+
+.navbar-toggler {
+  display: none;
+}
+
+#dropdown-basic {
+  margin-right: 10px;
+} 
+
+.nav-link {
+  padding: 7.5px;
+}
+
+.navbar-brand {
+  margin-left: 0px;
+  padding: 5px 20px;
+  background-color: #302f2f;
+  border-radius: 10px;
+}
+
+.navbar-brand.hovered {
+  background-color: #383737;
+}
+
+.navbar-brand.selected {
+  background-color: #383737;
+  cursor: default !important;
+}
+
+.main-page-span {
+  color: rgb(148, 76, 190) !important;
+}
+
+.main-page-span.hovered {
+  color: rgb(168, 126, 191) !important;
+}
+
+.auth-buttons-container {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.auth-button {
+  margin-left: 20px; 
+  color: #000; 
+  text-decoration: none; 
+  background-color: #393839;
+  padding: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 20px;
+}
+
+.auth-button:hover {
+  margin-left: 20px; 
+  color: #000; 
+  text-decoration: none; 
+  background-color: #565656;
+  padding: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 20px;
+}
+
+.auth-button.hovered {
+  margin-left: 20px; 
+  color: #000; 
+  text-decoration: none; 
+  background-color: #565656;
+  padding: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 20px;
+}
+
+.profile-icon {
+  position: absolute;
+  right: 20px;
+  top: 0.5px;
+  /* transform: translateX(-40%); */
+}
+
+.profile-img {
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  object-fit: cover;
+  border-radius: 100px;
+}
+
+.profile-img-placeholder {
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 100px;
+  background-color: #060606;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: #853b94;
+  user-select: none;
+  /* top: 0.5px; */
+  /* transform: translateX(-40%); */
+}
+
+.profile-img:hover,
+.profile-img.hovered {
+  filter: brightness(0.8);
+}
+
+.profile-img-placeholder:hover,
+.profile-img-placeholder.hovered {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.navbar-nav .dropdown-menu {
+  position: absolute;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 300px;
+  background-color: #303030 !important;
+  padding: 0px;
+}
+
+.profile-menu-item {
+  color: rgb(173, 130, 213) !important;
+  background-color: rgb(61, 61, 61);
+  border-radius: 5px;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.profile-menu-item:hover {
+  background-color: rgb(86, 86, 86) !important;
+  color: rgb(220, 193, 245) !important;
+}
+
+.react-tooltip {
+  color: white !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.navbar-brand {
+  /* Стили для бренда */
+}
+
+.navbar-toggler {
+  /* Стили для кнопки переключения */
+}
+
+.navbar-nav {
+  /* Стили для навигационного меню */
+}
+
+.nav-item {
+  /* Стили для пунктов меню */
+}
+
+.nav-link {
+}
+
+.nav-link.disabled {
+}
+
+.form-control {
+}
+
+.btn {
+  /* Стили для кнопок */
+}

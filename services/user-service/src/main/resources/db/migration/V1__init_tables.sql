@@ -36,7 +36,7 @@ create table user_profile
         primary key
         constraint fkuganfwvnbll4kn2a3jeyxtyi
             references users,
-    image_id            bigint,
+    image_url            varchar,
     musician_profile_id uuid
         constraint uke06i2imcw5we30ti17lll1x0l
             unique,

@@ -1,12 +1,11 @@
 package com.github.fckng0d.userservice.service;
 
 import com.github.fckng0d.dto.UploadFileDto;
-import com.github.fckng0d.dto.musicianservice.CreateMusicianDto;
 import com.github.fckng0d.dto.musicianservice.MusicianResponseDto;
 import com.github.fckng0d.userservice.domain.User;
 import com.github.fckng0d.userservice.domain.UserProfile;
 import com.github.fckng0d.userservice.exception.profile.MusicianProfileAlreadyAssignedException;
-import com.github.fckng0d.userservice.grpc.client.ImageServiceGrpcClient;
+import com.github.fckng0d.userservice.grpc.client.StorageServiceGrpcClient;
 import com.github.fckng0d.userservice.grpc.client.MusicianServiceGrpcClient;
 import com.github.fckng0d.userservice.repositoty.UserProfileRepository;
 import com.github.fckng0d.grpc.musicianservice.CreateMusicianRequest;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
-    private final ImageServiceGrpcClient imageServiceGrpcClient;
+    private final StorageServiceGrpcClient storageServiceGrpcClient;
     private final MusicianServiceGrpcClient musicianServiceGrpcClient;
 
     private final UserProfileRepository userProfileRepository;
@@ -51,12 +50,12 @@ public class UserProfileService {
     }
 
     public void uploadProfileImage(UUID profileId, UploadFileDto imageRequestDto) {
-        String newImageUrl = imageServiceGrpcClient.uploadImage(imageRequestDto);
+        String newImageUrl = storageServiceGrpcClient.uploadImage(imageRequestDto);
 
         UserProfile userProfile = this.getUserProfileById(profileId);
         String profileImageUrl = userProfile.getImageUrl();
         if (userProfile.getImageUrl() != null) {
-            imageServiceGrpcClient.deleteImageByUrl(profileImageUrl);
+            storageServiceGrpcClient.deleteImageByUrl(profileImageUrl);
         }
         userProfile.setImageUrl(newImageUrl);
         userProfileRepository.save(userProfile);
@@ -66,7 +65,7 @@ public class UserProfileService {
         UserProfile userProfile = this.getUserProfileById(profileId);
 
         if (userProfile.getImageUrl() != null) {
-            imageServiceGrpcClient.deleteImageByUrl(userProfile.getImageUrl());
+            storageServiceGrpcClient.deleteImageByUrl(userProfile.getImageUrl());
             userProfile.setImageUrl(null);
             userProfileRepository.save(userProfile);
         }

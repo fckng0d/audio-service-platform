@@ -81,4 +81,5 @@ message AudioDataResponse {
 message AudioResponse {
   int64 audioId = 1;
   string audioUrl = 2;
+  int32 duration_seconds = 3;
 }

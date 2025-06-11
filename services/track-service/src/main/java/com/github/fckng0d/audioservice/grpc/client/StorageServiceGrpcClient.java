@@ -1,15 +1,15 @@
 package com.github.fckng0d.audioservice.grpc.client;
 
-import com.github.fckng0d.audioservice.mapper.grpc.AudioMapper;
+import com.github.fckng0d.audioservice.mapper.grpc.TrackMapper;
 import com.github.fckng0d.audioservice.mapper.grpc.ImageMapper;
 import com.github.fckng0d.dto.UploadFileDto;
 import com.github.fckng0d.dto.storageservice.AudioDataResponseDto;
+import com.github.fckng0d.dto.storageservice.AudioResponseDto;
 import com.github.fckng0d.dto.storageservice.ImageDataResponseDto;
 import com.github.fckng0d.grpc.storageservice.ImageDataResponse;
 import com.github.fckng0d.grpc.storageservice.ImageServiceGrpc;
 import com.github.fckng0d.grpc.storageservice.AudioServiceGrpc;
 import com.github.fckng0d.grpc.storageservice.UploadImageRequest;
-import com.github.fckng0d.grpc.storageservice.UploadAudioRequest;
 import com.github.fckng0d.grpc.storageservice.AudioUrlRequest;
 import com.github.fckng0d.grpc.storageservice.AudioDataResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StorageServiceGrpcClient {
 
-    @GrpcClient("image-service")
+    @GrpcClient("storage-service")
     private ImageServiceGrpc.ImageServiceBlockingStub imageServiceBlockingStub;
 
-    @GrpcClient("image-service")
+    @GrpcClient("storage-service")
     private AudioServiceGrpc.AudioServiceBlockingStub audioServiceBlockingStub;
 
     private final ImageMapper imageMapper;
-    private final AudioMapper audioMapper;
+    private final TrackMapper trackMapper;
 
     public String uploadImage(UploadFileDto requestDto) {
         UploadImageRequest request = imageMapper.toUploadImageRequest(requestDto);
@@ -51,9 +51,14 @@ public class StorageServiceGrpcClient {
         imageServiceBlockingStub.deleteImageByUrl(request);
     }
 
-    public String uploadAudio(UploadFileDto requestDto) {
-        UploadAudioRequest request = audioMapper.toUploadAudioRequest(requestDto);
-        return audioServiceBlockingStub.uploadAudio(request).getAudioUrl();
+    public AudioResponseDto uploadAudio(UploadFileDto requestDto) {
+        var request = trackMapper.toUploadAudioRequest(requestDto);
+        var audioResponse = audioServiceBlockingStub.uploadAudio(request);
+
+        return AudioResponseDto.builder()
+                .audioUrl(audioResponse.getAudioUrl())
+                .durationSeconds((short) audioResponse.getDurationSeconds())
+                .build();
     }
 
     public AudioDataResponseDto getAudioDataByUrl(String url) {
@@ -62,7 +67,7 @@ public class StorageServiceGrpcClient {
                 .build();
 
         AudioDataResponse response = audioServiceBlockingStub.getAudioDataByUrl(request);
-        return audioMapper.toAudioDataResponseDto(response);
+        return trackMapper.toAudioDataResponseDto(response);
     }
 
     public void deleteAudioByUrl(String url) {

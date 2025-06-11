@@ -16,12 +16,18 @@ import "track_service.proto";
 service AlbumService {
   rpc CreateAlbum (CreateAlbumRequest) returns (AlbumResponse);
   rpc DeleteAlbum (AlbumByIdRequest) returns (google.protobuf.Empty);
+
+  rpc GetAlbumById(AlbumByIdRequest) returns (AlbumResponse);
+
+  rpc GetAlbumPreviewsByMusician (MusicianNicknameRequest) returns (AlbumPreviewListResponse);
+  rpc GetGuestAlbumPreviewsByMusician (MusicianNicknameRequest) returns (AlbumPreviewListResponse);
+
   rpc GetAllMusicians (AlbumByIdRequest) returns (AlbumMusiciansResponse);
 }
 
 message CreateAlbumRequest {
   string name = 1;
-  repeated string musician_ids = 2;
+  repeated string musician_nicknames = 2;
   UploadFileRequest cover_image = 3;
   repeated com.github.fckng0d.trackservice.CreateTrackRequest tracks = 4;
 }
@@ -31,32 +37,40 @@ message UploadFileRequest {
   bytes file_data = 2;
 }
 
-message CreateTrackRequest {
-  string name = 1;
-  repeated string languages = 2;
-  repeated string genres = 3;
-  string lyrics = 4;
-  bool is_explicit = 5;
-  repeated string musician_ids = 6;
-  UploadFileRequest cover_image = 7;
-  UploadFileRequest track_file = 8;
-}
-
 message AlbumResponse {
   string album_id = 1;
   string name = 2;
   repeated string languages = 3;
   repeated string genres = 4;
   google.protobuf.Timestamp release_date = 5;
-  bool is_available = 6;
-  bool is_blocked = 7;
-  int32 total_duration_seconds = 8;
-  int64 audition_count = 9;
-  int32 album_in_favorites_count = 10;
-  string cover_image_url = 11;
-  repeated int64 track_ids = 12;
-  repeated string musician_ids = 13;
-  repeated string track_guest_ids = 14;
+  bool is_explicit = 6;
+  bool is_available = 7;
+  bool is_blocked = 8;
+  int32 total_duration_seconds = 9;
+  int64 audition_count = 10;
+  int64 album_in_favorites_count = 11;
+  string cover_image_url = 12;
+  repeated com.github.fckng0d.trackservice.TrackPreviewResponse tracks = 13;
+  repeated string musician_nicknames = 14;
+  repeated string track_guest_nicknames = 15;
+}
+
+message AlbumPreviewResponse {
+  string album_id = 1;
+  string name = 2;
+  string cover_image_url = 3;
+  int32 release_year = 4;
+  repeated string musician_nicknames = 5;
+  bool is_explicit = 6;
+  int64 audition_count = 7;
+}
+
+message MusicianNicknameRequest {
+  string nickname = 1;
+}
+
+message AlbumPreviewListResponse {
+  repeated AlbumPreviewResponse albums = 1;
 }
 
 message AlbumByIdRequest {
@@ -64,5 +78,5 @@ message AlbumByIdRequest {
 }
 
 message AlbumMusiciansResponse {
-  repeated string musician_ids = 1;
+  repeated string musician_nicknames = 1;
 }

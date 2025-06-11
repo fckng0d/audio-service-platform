@@ -26,7 +26,7 @@ public class CreateAlbumDto {
 
     @NotNull
     @NotEmpty
-    private List<UUID> musicianIds;
+    private List<String> musicianNicknames;
 
     private UploadFileDto coverImage;
 

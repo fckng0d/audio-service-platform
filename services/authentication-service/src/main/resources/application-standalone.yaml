@@ -32,9 +32,9 @@ spring:
       max-request-size: 100MB
 
 jwt:
-  secret: "7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"
-  access-expiration-ms: 900000 # 15 минут
-  refresh-expiration-ms: 2592000000 # 1 месяц
+  secret: ${JWT_SECRET:"7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"}
+  access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000} # 15 минут
+  refresh-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:2592000000} # 1 месяц
 
 grpc:
   server:

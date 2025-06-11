@@ -1,5 +1,7 @@
 package com.github.fckng0d.dto.musicianservice;
 
+import com.github.fckng0d.dto.albumservice.AlbumPreviewResponseDto;
+import com.github.fckng0d.dto.albumservice.AlbumResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,5 +25,7 @@ public class MusicianResponseDto {
     private boolean isBlocked;
     private String avatarImageUrl;
     private String headerImageUrl;
-    List<UUID> albumIds;
+    List<AlbumPreviewResponseDto> albums;
+    List<AlbumPreviewResponseDto> guestAlbums;
+    List<UUID> subscriberIds;
 }

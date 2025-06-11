@@ -65,7 +65,9 @@ message MusicianResponse {
   bool is_blocked = 7;
   string avatar_image_url = 8;
   string header_image_url = 9;
-  repeated string album_ids = 10;
+  repeated com.github.fckng0d.albumservice.AlbumPreviewResponse albums = 10;
+  repeated com.github.fckng0d.albumservice.AlbumPreviewResponse guest_albums = 11;
+  repeated string subscriber_ids = 12;
 }
 
 message UpdateNicknameRequest {
@@ -87,17 +89,6 @@ message UploadMusicianImageRequest {
 message UploadFileRequest {
   string file_name = 1;
   bytes file_data = 2;
-}
-
-message CreateTrackRequest {
-  string name = 1;
-  repeated string languages = 2;
-  repeated string genres = 3;
-  string lyrics = 4;
-  bool is_explicit = 5;
-  UploadFileRequest cover_image = 6;
-  repeated string musician_ids = 7;
-  UploadFileRequest track_file = 8;
 }
 
 message AlbumIdsResponse {

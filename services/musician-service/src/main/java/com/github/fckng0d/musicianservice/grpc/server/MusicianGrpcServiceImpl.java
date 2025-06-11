@@ -15,9 +15,9 @@ import com.github.fckng0d.grpc.albumservice.AlbumResponse;
 import com.github.fckng0d.grpc.musicianservice.UploadMusicianImageRequest;
 import com.github.fckng0d.musicianservice.domain.Musician;
 import com.github.fckng0d.dto.musicianservice.CreateMusicianDto;
-import com.github.fckng0d.musicianservice.grpc.client.ImageServiceGrpcClient;
+import com.github.fckng0d.musicianservice.grpc.client.StorageServiceGrpcClient;
 import com.github.fckng0d.musicianservice.mapper.grpc.ImageMapper;
-import com.github.fckng0d.musicianservice.mapper.internal.AlbumMapper;
+import com.github.fckng0d.musicianservice.mapper.grpc.AlbumMapper;
 import com.github.fckng0d.musicianservice.mapper.internal.MusicianMapper;
 import com.github.fckng0d.musicianservice.service.MusicianService;
 import com.google.protobuf.Empty;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @GrpcService
 @RequiredArgsConstructor
 public class MusicianGrpcServiceImpl extends MusicianServiceGrpc.MusicianServiceImplBase {
-    private final ImageServiceGrpcClient imageServiceGrpcClient;
+    private final StorageServiceGrpcClient storageServiceGrpcClient;
 
     private final MusicianService musicianService;
     private final MusicianMapper musicianMapper;
@@ -72,23 +72,22 @@ public class MusicianGrpcServiceImpl extends MusicianServiceGrpc.MusicianService
 
     @Override
     public void getMusicianByNickname(MusicianByNicknameRequest request, StreamObserver<MusicianResponse> responseObserver) {
-        Musician musician = musicianService.getByNickname(request.getNickname());
+        var musicianResponseDto = musicianService.getMusicianByNickname(request.getNickname());
+        var musicianResponse = musicianMapper.toMusicianResponse(musicianResponseDto);
 
-        var response = musicianMapper.toMusicianResponse(musician);
-
-        responseObserver.onNext(response);
+        responseObserver.onNext(musicianResponse);
         responseObserver.onCompleted();
     }
 
-    @Override
-    public void getMusicianById(MusicianByIdRequest request, StreamObserver<MusicianResponse> responseObserver) {
-        Musician musician = musicianService.getById(UUID.fromString(request.getMusicianId()));
-
-        var response = musicianMapper.toMusicianResponse(musician);
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
+//    @Override
+//    public void getMusicianById(MusicianByIdRequest request, StreamObserver<MusicianResponse> responseObserver) {
+//        Musician musician = musicianService.getById(UUID.fromString(request.getMusicianId()));
+//
+//        var response = musicianMapper.toMusicianResponseBuilder(musician);
+//
+//        responseObserver.onNext(response);
+//        responseObserver.onCompleted();
+//    }
 
     @Override
     public void updateNickname(UpdateNicknameRequest request, StreamObserver<MusicianResponse> responseObserver) {
@@ -159,9 +158,7 @@ public class MusicianGrpcServiceImpl extends MusicianServiceGrpc.MusicianService
         var uploadImageDto = imageMapper.toUploadFileRequestDto(request);
 
         var albumRequestDto = albumMapper.toCreateAlbumDto(request);
-        albumRequestDto.setMusicianIds(request.getMusicianIdsList().stream()
-                .map(UUID::fromString)
-                .toList());
+        albumRequestDto.setMusicianNicknames(request.getMusicianNicknamesList());
         albumRequestDto.setCoverImage(uploadImageDto);
 
         var albumResponseDto = musicianService.createAlbum(albumRequestDto);

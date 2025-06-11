@@ -27,6 +27,9 @@ public class Audio {
     )
     private Long id;
 
+    @Column(name = "duration_serconds")
+    private Short durationSeconds;
+
     @Column(name = "url", nullable = false, unique = true)
     private String url;
 
@@ -38,6 +41,7 @@ public class Audio {
 
     @Column(name = "file_size")
     private Long fileSize;
+
 
     @CreatedDate
     @Column(name = "upload_date")

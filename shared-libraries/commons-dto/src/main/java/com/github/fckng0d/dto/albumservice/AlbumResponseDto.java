@@ -2,6 +2,7 @@ package com.github.fckng0d.dto.albumservice;
 
 import com.github.fckng0d.dto.Language;
 import com.github.fckng0d.dto.MusicGenre;
+import com.github.fckng0d.dto.trackservice.TrackPreviewResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,13 +23,16 @@ public class AlbumResponseDto {
     private List<Language> languages;
     private List<MusicGenre> genres;
     private Instant releaseDate;
+    private Boolean isExplicit;
     private Boolean isAvailable;
     private Boolean isBlocked;
     private Integer totalDurationSeconds;
     private Long auditionCount;
-    private Integer albumInFavoritesCount;
+    private Long albumInFavoritesCount;
     private String coverImageUrl;
-    private List<Long> trackIds;
-    private List<UUID> musicianIds;
-    private List<UUID> trackGuestIds;
+    @Builder.Default
+    private List<TrackPreviewResponseDto> tracks = new ArrayList<>();
+    private List<String> musicianNicknames;
+    @Builder.Default
+    private List<String> trackGuestNicknames = new ArrayList<>();
 }

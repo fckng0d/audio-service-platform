@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ImageMapper {
-    @Mapping(target = "imageFileData", source = "imageFileData", qualifiedByName = "byteArrayToByteString")
+    @Mapping(target = "imageFileData", source = "fileData", qualifiedByName = "byteArrayToByteString")
     UploadImageRequest toUploadImageRequest(UploadFileDto dto);
 
     default UploadFileDto toUploadFileRequestDto(CreateAlbumRequest request) {

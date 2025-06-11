@@ -7,6 +7,7 @@ import com.github.fckng0d.dto.storageservice.AudioResponseDto;
 import com.github.fckng0d.storageservice.domain.Audio;
 import com.github.fckng0d.storageservice.exception.AudioNotFoundException;
 import com.github.fckng0d.storageservice.repository.AudioRepository;
+import com.github.fckng0d.storageservice.util.AudioUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,17 +47,21 @@ public class AudioService {
         String originFileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'));
         String fileExtension = fullFileName.substring(fullFileName.lastIndexOf('.') + 1);
 
+        short durationInSeconds = (short) AudioUtils.getDurationInSeconds(requestDto.getFileData());
         Audio audio = Audio.builder()
                 .url(audioUrl)
+                .durationSeconds(durationInSeconds)
                 .originalFileName(originFileName)
                 .fileExtension(fileExtension)
                 .fileSize((long) imageFileData.length)
                 .build();
+
         Audio savedAudio = audioRepository.save(audio);
 
         return AudioResponseDto.builder()
                 .audioId(savedAudio.getId())
                 .audioUrl(savedAudio.getUrl())
+                .durationSeconds(savedAudio.getDurationSeconds())
                 .build();
     }
 

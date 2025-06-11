@@ -9,7 +9,7 @@ import com.github.fckng0d.userservice.exception.user.EmailAlreadyExistsException
 import com.github.fckng0d.userservice.exception.user.UserNotFoundException;
 import com.github.fckng0d.userservice.exception.user.UserRoleAlreadyAssignedException;
 import com.github.fckng0d.userservice.exception.user.UsernameAlreadyExistsException;
-import com.github.fckng0d.userservice.grpc.client.ImageServiceGrpcClient;
+import com.github.fckng0d.userservice.grpc.client.StorageServiceGrpcClient;
 import com.github.fckng0d.userservice.repositoty.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class UserService {
     private static final String DEFAULT_ROLE = "LISTENER_ROLE";
 
-    private final ImageServiceGrpcClient imageServiceGrpcClient;
+    private final StorageServiceGrpcClient storageServiceGrpcClient;
 
     private final UserRepository userRepository;
     private final UserRoleService userRoleService;
@@ -90,7 +90,7 @@ public class UserService {
         userRepository.delete(user);
 
         if (profileImageUrl != null) {
-            imageServiceGrpcClient.deleteImageByUrl(profileImageUrl);
+            storageServiceGrpcClient.deleteImageByUrl(profileImageUrl);
         }
     }
 

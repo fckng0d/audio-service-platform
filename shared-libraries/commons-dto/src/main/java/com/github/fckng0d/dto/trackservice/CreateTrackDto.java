@@ -37,7 +37,7 @@ public class CreateTrackDto {
 
     @NotNull
     @NotEmpty
-    private List<UUID> musicianIds;
+    private List<String> musicianNicknames;
 
     private String lyrics;
 

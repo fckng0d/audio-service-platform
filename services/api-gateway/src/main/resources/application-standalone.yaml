@@ -8,14 +8,24 @@ spring:
     config:
       enabled: false
     gateway:
+      globalcors:
+        default-filters:
+          - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "http://localhost:[*]"
+            allowCredentials: true
+            allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
+            allowedHeaders: "*"
+            maxAge: 3600
       routes:
         # Auth
         - id: auth-service-route
           predicates:
-          - Path=/auth/**
-          uri: forward:/adapter-auth
+            - Path=/api/auth/register
+          uri: forward:/
           filters:
-            - RewritePath=/auth/(?<segment>.*), /adapter-auth/auth/$\{segment}
+            - RewritePath=/, /adapter-auth/register
 
         # Пользователи
         #   (предполагается, что на фронтенде доступ только к своему id,
@@ -24,7 +34,7 @@ spring:
         - id: user-service-user-route
           predicates:
             - Path=/user/{userId}/**
-           # - Path=/users
+            # - Path=/users
           uri: forward:/adapter-user
           filters:
             - RewritePath=/user/(?<userId>[^/]+)(?<tail>/?.*), /adapter-user/$\{userId}$\{tail}
@@ -67,8 +77,9 @@ spring:
 
 
 jwt:
-  secret: "7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"
-  access-expiration-ms: 900000 # 15 минут
+  secret: ${JWT_SECRET:"7FSDJ349DJDV9CAM2M5N593ND3N49DN384ND83N5AQQNFZXC2944CJWHDEJEOA23"}
+  access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000} # 15 минут
+  refresh-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:2592000000} # 1 месяц
 
 grpc:
   client:
@@ -82,3 +93,8 @@ grpc:
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG

@@ -10,23 +10,24 @@ import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
-
 service TrackService {
-  rpc CreateTrack (CreateTrackRequest) returns (TrackResponse);
-  rpc DeleteTrack  (TrackByIdRequest) returns (google.protobuf.Empty);
+  rpc CreateTrack (CreateTrackRequest) returns (TrackPreviewResponse);
+  rpc DeleteTrack (TrackByIdRequest) returns (google.protobuf.Empty);
 
   rpc GetTrackById (TrackByIdRequest) returns (TrackResponse);
+  rpc GetTrackPreviewsByAlbumId (AlbumIdRequest) returns (TrackPreviewListResponse);
 }
 
 message CreateTrackRequest {
-  string name = 1;
-  repeated string languages = 2;
-  repeated string genres = 3;
-  repeated string musician_ids = 4;
-  string lyrics = 5;
-  bool is_explicit = 6;
-  UploadFileRequest cover_image = 7;
-  UploadFileRequest track_file = 8;
+  string album_id = 1;
+  string name = 2;
+  repeated string languages = 3;
+  repeated string genres = 4;
+  repeated string musician_nicknames = 5;
+  string lyrics = 6;
+  bool is_explicit = 7;
+  UploadFileRequest cover_image = 8;
+  UploadFileRequest track_file = 9;
 }
 
 message UploadFileRequest {
@@ -45,11 +46,34 @@ message TrackResponse {
   string lyrics = 8;
   string cover_image_url = 9;
   string album_id = 10;
-  repeated string musician_ids = 11;
+  repeated string musician_nicknames = 11;
   bool is_available = 12;
   bool is_explicit = 13;
   int64 audition_count = 14;
-  int32 track_in_favorites_count = 15;
+  int64 track_in_favorites_count = 15;
+}
+
+message TrackPreviewResponse {
+  int64 id = 1;
+  string name = 2;
+  string track_url = 3;
+  int32 duration_seconds = 4;
+  string lyrics = 5;
+  string cover_image_url = 6;
+  string album_id = 7;
+  repeated string musician_nicknames = 8;
+  bool is_available = 9;
+  bool is_explicit = 10;
+  int64 audition_count = 11;
+  int64 track_in_favorites_count = 12;
+}
+
+message AlbumIdRequest{
+  string album_id = 1;
+}
+
+message TrackPreviewListResponse {
+  repeated TrackPreviewResponse tracks = 1;
 }
 
 message TrackByIdRequest {

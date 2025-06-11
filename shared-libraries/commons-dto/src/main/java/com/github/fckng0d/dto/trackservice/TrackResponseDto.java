@@ -26,9 +26,9 @@ public class TrackResponseDto {
     private String lyrics;
     private String coverImageUrl;
     private UUID albumId;
-    private List<UUID> musicianIds;
+    private List<String> musicianNicknames;
     private Boolean isAvailable;
     private Boolean isExplicit;
     private Long auditionCount;
-    private Integer trackInFavoritesCount;
+    private Long trackInFavoritesCount;
 }

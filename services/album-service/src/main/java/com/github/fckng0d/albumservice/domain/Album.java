@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "albums", indexes = {
-        @Index(name = "idx_nickname", columnList = "nickname")
+        @Index(name = "idx_name", columnList = "name")
 })
 public class Album {
     @Id
@@ -47,6 +47,9 @@ public class Album {
     @Column(name = "release_date", nullable = false, updatable = false)
     private Instant releaseDate;
 
+    @Column(name = "is_explicit", nullable = false)
+    private Boolean isExplicit;
+
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable;
 
@@ -60,7 +63,7 @@ public class Album {
     private Long auditionCount;
 
     @Column(name = "album_in_favorites_count")
-    private Integer albumInFavoritesCount;
+    private Long albumInFavoritesCount;
 
     @Column(name = "cover_image_url")
     private String coverImageUrl;
@@ -75,19 +78,25 @@ public class Album {
      * Исполнители (если принимают участие во всех треках, т.е. во всем альбоме)
      */
     @ElementCollection
-    @CollectionTable(name = "album_musician_ids", joinColumns = @JoinColumn(name = "album_id"))
-    @Column(name = "musician_ids")
+    @CollectionTable(
+            name = "album_musician_nicknames",
+            joinColumns = @JoinColumn(name = "album_id"),
+            indexes = @Index(name = "idx_album_musician_nickname", columnList = "musician_nicknames")
+    )
+    @Column(name = "musician_nicknames")
     @Builder.Default
-    private List<UUID> musicianIds = new ArrayList<>();
+    private List<String> musicianNicknames = new ArrayList<>();
 
     /**
      * Исполнители (если принимают участие в каком-либо треке, но не во всем альбоме)
      * нужно в будущем для одобрения заявки на участие
      */
     @ElementCollection
-    @CollectionTable(name = "album_track_guest_ids", joinColumns = @JoinColumn(name = "album_id"))
-    @Column(name = "track_guest_ids")
+    @CollectionTable(name = "album_track_guest_nicknames",
+            joinColumns = @JoinColumn(name = "album_id"),
+            indexes = @Index(name = "idx_album_track_guest_nickname", columnList = "track_guest_nicknames"))
+    @Column(name = "track_guest_nicknames")
     @Builder.Default
-    private List<UUID> trackGuestIds = new ArrayList<>();
+    private List<String> trackGuestNicknames = new ArrayList<>();
 
 }

@@ -6,8 +6,8 @@ import com.github.fckng0d.grpc.userservice.UserProfileByIdRequest;
 import com.github.fckng0d.grpc.userservice.UserProfileResponse;
 import com.github.fckng0d.grpc.userservice.UserProfileServiceGrpc;
 import com.github.fckng0d.userservice.domain.UserProfile;
-import com.github.fckng0d.userservice.grpc.client.ImageServiceGrpcClient;
-import com.github.fckng0d.userservice.mapper.internal.UserProfileMapper;
+import com.github.fckng0d.userservice.grpc.client.StorageServiceGrpcClient;
+//import com.github.fckng0d.userservice.mapper.internal.UserProfileMapper;
 import com.github.fckng0d.userservice.service.UserProfileService;
 import com.github.fckng0d.grpc.musicianservice.CreateMusicianRequest;
 import com.github.fckng0d.grpc.musicianservice.MusicianResponse;
@@ -22,10 +22,10 @@ import java.util.UUID;
 @GrpcService
 @RequiredArgsConstructor
 public class UserProfileGrpcServiceImpl extends UserProfileServiceGrpc.UserProfileServiceImplBase {
-    private final ImageServiceGrpcClient imageServiceGrpcClient;
+    private final StorageServiceGrpcClient storageServiceGrpcClient;
 
     private final UserProfileService userProfileService;
-    private final UserProfileMapper userProfileMapper;
+//    private final UserProfileMapper userProfileMapper;
 
     @Override
     public void getUserProfileById(UserProfileByIdRequest request, StreamObserver<UserProfileResponse> responseObserver) {
@@ -61,11 +61,6 @@ public class UserProfileGrpcServiceImpl extends UserProfileServiceGrpc.UserProfi
                 .setIsBlocked(musicianResponseDto.isBlocked())
                 .setAvatarImageUrl(musicianResponseDto.getAvatarImageUrl())
                 .setHeaderImageUrl(musicianResponseDto.getHeaderImageUrl())
-                .addAllAlbumIds(
-                        musicianResponseDto.getAlbumIds().stream()
-                                .map(UUID::toString)
-                                .toList()
-                )
                 .setCreationDate(
                         Timestamp.newBuilder()
                                 .setSeconds(musicianResponseDto.getCreationDate().getEpochSecond())

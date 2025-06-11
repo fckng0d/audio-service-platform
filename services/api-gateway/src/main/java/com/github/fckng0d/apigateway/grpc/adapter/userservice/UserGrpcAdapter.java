@@ -3,7 +3,7 @@ package com.github.fckng0d.apigateway.grpc.adapter.userservice;
 import com.github.fckng0d.apigateway.dto.userservice.AssignRoleDto;
 import com.github.fckng0d.apigateway.dto.userservice.UpdateEmailDto;
 import com.github.fckng0d.apigateway.dto.userservice.UpdateUsernameDto;
-import com.github.fckng0d.apigateway.mapper.UserMapper;
+import com.github.fckng0d.apigateway.mapper.userservice.UserMapper;
 import com.github.fckng0d.dto.userservice.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;

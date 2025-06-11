@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AudioResponseDto {
     private Long audioId;
     private String audioUrl;
+    private Short durationSeconds;
 }

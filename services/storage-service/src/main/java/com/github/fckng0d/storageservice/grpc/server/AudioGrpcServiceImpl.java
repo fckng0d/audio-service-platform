@@ -23,12 +23,13 @@ public class AudioGrpcServiceImpl extends AudioServiceGrpc.AudioServiceImplBase 
 
     @Override
     public void uploadAudio(UploadAudioRequest request, StreamObserver<AudioResponse> responseObserver) {
-        var dto = audioMapper.toUploadAudioRequestDto(request);
-        AudioResponseDto responseDto = audioService.uploadAudio(dto);
+        var requestDto = audioMapper.toUploadAudioRequestDto(request);
+        var responseDto = audioService.uploadAudio(requestDto);
 
-        AudioResponse response = AudioResponse.newBuilder()
+        var response = AudioResponse.newBuilder()
                 .setAudioId(responseDto.getAudioId())
                 .setAudioUrl(responseDto.getAudioUrl())
+                .setDurationSeconds(responseDto.getDurationSeconds())
                 .build();
 
         responseObserver.onNext(response);
@@ -59,6 +60,7 @@ public class AudioGrpcServiceImpl extends AudioServiceGrpc.AudioServiceImplBase 
         AudioResponse response = AudioResponse.newBuilder()
                 .setAudioId(audio.getId())
                 .setAudioUrl(audio.getUrl())
+                .setDurationSeconds(audio.getDurationSeconds())
                 .build();
 
         responseObserver.onNext(response);
@@ -71,6 +73,7 @@ public class AudioGrpcServiceImpl extends AudioServiceGrpc.AudioServiceImplBase 
         AudioResponse response = AudioResponse.newBuilder()
                 .setAudioId(audio.getId())
                 .setAudioUrl(audio.getUrl())
+                .setDurationSeconds(audio.getDurationSeconds())
                 .build();
 
         responseObserver.onNext(response);

@@ -31,8 +31,8 @@
         <module name="authentication-service" />
         <module name="album-service" />
         <module name="api-gateway" />
-        <module name="user-service" />
         <module name="storage-service" />
+        <module name="user-service" />
         <module name="musician-service" />
         <module name="track-service" />
       </profile>

@@ -3,7 +3,7 @@ package com.github.fckng0d.apigateway.grpc.adapter.userservice;
 import com.github.fckng0d.apigateway.dto.userservice.CreateRoleRequestDto;
 import com.github.fckng0d.apigateway.dto.userservice.UsersIdsByRoleNameRequestDto;
 import com.github.fckng0d.apigateway.dto.userservice.UsersIdsByRoleNameResponseDto;
-import com.github.fckng0d.apigateway.mapper.UserRoleMapper;
+import com.github.fckng0d.apigateway.mapper.userservice.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import com.github.fckng0d.grpc.userservice.GetUsersByRoleNameRequest;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

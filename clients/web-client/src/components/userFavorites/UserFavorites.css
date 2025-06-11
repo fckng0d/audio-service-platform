@@ -1,0 +1,12 @@
+.playlist-container-collection *:focus {
+  outline: none;
+}
+
+.favorite-audio-list {
+  overflow-y: hidden;
+  scroll-behavior: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  width: 200px !important;
+}
+

@@ -1,0 +1,171 @@
+/* styles.css */
+
+.sing-in-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 70px;
+  padding: 20px;
+  color: whitesmoke;
+  height: 623px;
+}
+
+.sing-in-container .error-message {
+  display: block;
+  min-height: 12px;
+  margin-top: -7px;
+  margin-left: 5px;
+  margin-bottom: -20px;
+  color: red;
+  font-size: 14px;
+}
+
+.sing-in-container .form {
+  width: 420px;
+  height: 320px;
+  padding: 50px;
+  background-color: #303030;
+  border-radius: 20px;
+  user-select: none;
+  position: relative;
+}
+
+.sing-in-container h3 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  margin-top: -15px;
+}
+
+.sing-in-container .input {
+  width: 100%;
+  height: 35px;
+  margin-bottom: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #121212;
+  color: #dfdfdf;
+  user-select: all;
+}
+
+/* Стили для инпутов без автозаполнения */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill::first-line {
+  -webkit-text-fill-color: #dfdfdf !important;
+  -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
+}
+
+/* Стили для инпутов в Firefox */
+input:-moz-autofill {
+  -moz-box-shadow: 0 0 0 1000px #121212 inset !important;
+  -moz-text-fill-color: #dfdfdf !important;
+}
+
+.sing-in-container .input-password {
+  position: relative;
+  width: 100%;
+  height: 35px;
+  margin-bottom: 4px;
+}
+
+.input-password .input {
+  box-sizing: border-box;
+}
+
+.input-password input[type="checkbox"] {
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  opacity: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.input-password label {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Отступ от правого края */
+  transform: translateY(-50%); /* Центрируем по вертикали */
+  width: 20px; /* Размер изображения */
+  height: 20px; /* Размер изображения */
+  background-size: cover; /* Масштабируем изображение */
+  cursor: pointer; /* Изменяем курсор при наведении */
+}
+
+.input::placeholder {
+  color: #989898;
+}
+
+.input:focus,
+.input:active {
+  outline: none;
+  /* outline-color: #7762cc;  */
+  border: solid 1.5px #7762cc;
+  padding: 9px;
+  color: #dfdfdf;
+}
+
+.sing-in-container .submit-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 20px; */
+}
+
+.sing-in-container .submit-button {
+  position: absolute;
+  bottom: 50px;
+  width: 50%;
+  height: 35px;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 640;
+  background-color: #7762cc;
+}
+
+.sing-in-container .submit-button:hover {
+  font-size: 18.2px;
+  background-color: #654cc7;
+}
+
+.sing-in-container .success-message {
+  position: absolute;
+  bottom: 95px;
+  left: -7px;
+  width: 100%;
+  font-size: 18px;
+  margin-left: 7px;
+}
+
+.sing-in-container .to-registarion {
+  position: absolute;
+  left: 17.8%;
+  height: 18px;
+  bottom: 20px;
+  font-size: 14px;
+  margin-left: 7px;
+}
+
+.sing-in-container .to-registarion .to-registarion-button {
+  padding: 0;
+  position: absolute;
+  left:40px;
+  height: 18px;
+  background-color: transparent;
+  color: rgb(170, 141, 189);
+  border: none; 
+  margin-left: 72%;
+}
+
+.sing-in-container .to-registarion .to-registarion-button:hover {
+  color: rgb(142, 90, 178);
+}
+
+.sing-in-container .to-registarion .to-registarion {
+}

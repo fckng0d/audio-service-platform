@@ -1,27 +1,28 @@
 package com.github.fckng0d.albumservice.service;
 
 import com.github.fckng0d.albumservice.domain.Album;
-import com.github.fckng0d.albumservice.grpc.client.ImageServiceGrpcClient;
+import com.github.fckng0d.albumservice.grpc.client.StorageServiceGrpcClient;
 import com.github.fckng0d.albumservice.grpc.client.TrackServiceGrpcClient;
 import com.github.fckng0d.albumservice.mapper.internal.AlbumMapper;
 import com.github.fckng0d.albumservice.repository.AlbumRepository;
 import com.github.fckng0d.dto.Language;
 import com.github.fckng0d.dto.MusicGenre;
+import com.github.fckng0d.dto.albumservice.AlbumPreviewResponseDto;
 import com.github.fckng0d.dto.albumservice.AlbumResponseDto;
 import com.github.fckng0d.dto.albumservice.CreateAlbumDto;
 import com.github.fckng0d.dto.trackservice.CreateTrackDto;
-import com.github.fckng0d.dto.trackservice.TrackResponseDto;
+import com.github.fckng0d.dto.trackservice.TrackPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AlbumService {
-    private final ImageServiceGrpcClient imageServiceGrpcClient;
+    private final StorageServiceGrpcClient storageServiceGrpcClient;
     private final TrackServiceGrpcClient trackServiceGrpcClient;
 
     private final AlbumRepository albumRepository;
@@ -36,22 +37,18 @@ public class AlbumService {
     @Transactional
     public AlbumResponseDto createAlbum(CreateAlbumDto albumDto) {
         String coverImageUrl = Optional.ofNullable(albumDto.getCoverImage())
-                .map(imageServiceGrpcClient::uploadImage)
+                .map(storageServiceGrpcClient::uploadImage)
                 .orElse(null);
 
-        List<MusicGenre> genres = extractGenres(albumDto.getTracks());
-        List<Language> languages = extractLanguages(albumDto.getTracks());
-        List<UUID> guestIds = extractTrackGuestIds(albumDto.getTracks(), albumDto.getMusicianIds());
+        List<MusicGenre> genres = this.extractGenres(albumDto.getTracks());
+        List<Language> languages = this.extractLanguages(albumDto.getTracks());
+        List<String> guestNicknames = this.extractTrackGuestNicknames(albumDto.getTracks(), albumDto.getMusicianNicknames());
 
-        var album = Album.builder()
-                .name(albumDto.getName())
-                .musicianIds(albumDto.getMusicianIds())
+        Album album = albumMapper.toAlbumBuilder(albumDto)
+                .coverImageUrl(coverImageUrl)
                 .genres(genres)
                 .languages(languages)
-                .trackGuestIds(guestIds)
-                .auditionCount(0L)
-                .coverImageUrl(coverImageUrl)
-                .albumInFavoritesCount(0)
+                .trackGuestNicknames(guestNicknames)
                 .build();
 
 
@@ -61,17 +58,26 @@ public class AlbumService {
             track.setAlbumId(savedAlbum.getId());
         }
 
-        List<TrackResponseDto> trackResponseDtoList = albumDto.getTracks().stream()
+        List<TrackPreviewResponseDto> trackPreviewResponseDtoList = albumDto.getTracks().stream()
                 .map(trackServiceGrpcClient::createTrack)
                 .toList();
 
-        savedAlbum.setTotalDurationSeconds(this.combineTotalDurationSeconds(trackResponseDtoList));
-        savedAlbum.setTrackIds(trackResponseDtoList.stream()
-                .map(TrackResponseDto::getId)
+        savedAlbum.setTotalDurationSeconds(this.combineTotalDurationSeconds(trackPreviewResponseDtoList));
+        savedAlbum.setTrackIds(trackPreviewResponseDtoList.stream()
+                .map(TrackPreviewResponseDto::getId)
                 .toList());
 
         savedAlbum = albumRepository.save(savedAlbum);
-        return albumMapper.toAlbumResponseDto(savedAlbum);
+
+        return albumMapper.toAlbumResponseDto(savedAlbum, trackPreviewResponseDtoList);
+    }
+
+    @Transactional
+    public AlbumResponseDto getAlbumById(UUID albumId) {
+        Album album = this.getById(albumId);
+        var trackPreviewDtoList = trackServiceGrpcClient.getTrackPreviewsByAlbumId(albumId);
+
+        return albumMapper.toAlbumResponseDto(album, trackPreviewDtoList);
     }
 
     @Transactional
@@ -84,9 +90,21 @@ public class AlbumService {
     }
 
     @Transactional
-    public List<UUID> getAllMusicians(UUID albumId) {
+    public List<AlbumPreviewResponseDto> getAllByMusicianNickname(String nickname) {
+        List<Album> albums = albumRepository.findAllByMusicianNickname(nickname);
+        return albumMapper.toAlbumPreviewResponseDtoList(albums);
+    }
+
+    @Transactional
+    public List<AlbumPreviewResponseDto> getAllByTrackGuestNickname(String nickname) {
+        List<Album> albums = albumRepository.findAllByTrackGuestNickname(nickname);
+        return albumMapper.toAlbumPreviewResponseDtoList(albums);
+    }
+
+    @Transactional
+    public List<String> getAllMusicians(UUID albumId) {
         Album album = this.getById(albumId);
-        return album.getMusicianIds();
+        return album.getMusicianNicknames();
     }
 
     private List<MusicGenre> extractGenres(List<CreateTrackDto> trackDtoList) {
@@ -103,18 +121,18 @@ public class AlbumService {
                 .toList();
     }
 
-    private List<UUID> extractTrackGuestIds(List<CreateTrackDto> trackDtoList, List<UUID> albumMusicianIds) {
-        Set<UUID> albumMusicianIdSet = new HashSet<>(albumMusicianIds);
+    private List<String> extractTrackGuestNicknames(List<CreateTrackDto> trackDtoList, List<String> albumMusicianNicknames) {
+        Set<String> albumMusicianNicknamesSet = new HashSet<>(albumMusicianNicknames);
         return trackDtoList.stream()
-                .flatMap(track -> track.getMusicianIds().stream())
-                .filter(musicianId -> !albumMusicianIdSet.contains(musicianId))
+                .flatMap(track -> track.getMusicianNicknames().stream())
+                .filter(nickname -> !albumMusicianNicknamesSet.contains(nickname))
                 .distinct()
                 .toList();
     }
 
-    private Integer combineTotalDurationSeconds(List<TrackResponseDto> trackResponseDtoList) {
-        return trackResponseDtoList.stream()
-                .mapToInt(TrackResponseDto::getDurationSeconds)
+    private Integer combineTotalDurationSeconds(List<TrackPreviewResponseDto> trackList) {
+        return trackList.stream()
+                .mapToInt(TrackPreviewResponseDto::getDurationSeconds)
                 .sum();
     }
 }

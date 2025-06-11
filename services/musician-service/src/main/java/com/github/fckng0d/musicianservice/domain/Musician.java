@@ -49,11 +49,23 @@ public class Musician {
     @Column(name = "header_image_url")
     private String headerImageUrl;
 
+    /**
+     *      Альбомы с полным участием (соавторство)
+    * */
     @ElementCollection
     @CollectionTable(name = "musician_album_ids", joinColumns = @JoinColumn(name = "musician_id"))
     @Column(name = "album_ids")
     @Builder.Default
     private List<UUID> albumIds = new ArrayList<>();
+
+    /**
+     *      Альбомы, в которых было принято участие (не соавторство)
+     * */
+    @ElementCollection
+    @CollectionTable(name = "guest_album_ids", joinColumns = @JoinColumn(name = "musician_id"))
+    @Column(name = "guest_album_ids")
+    @Builder.Default
+    private List<UUID> guestAlbumIds = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "musician_subscriber_ids", joinColumns = @JoinColumn(name = "musician_id"))
